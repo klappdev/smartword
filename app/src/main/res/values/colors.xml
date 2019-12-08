@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#607d8b</color>
+    <color name="colorPrimaryDark">#789cad</color>
+    <color name="colorAccent">#ededed</color>
+
+    <color name="black_color">#000000</color>
+    <color name="gray_color">#b2b2b2</color>
+    <color name="indigo_color">#3e4fb1</color>
+    <color name="pink_color">#fa3f7e</color>
+
+    <color name="pressed_color">#4d90fe</color>
+    <color name="default_color">#ffffff</color>
+
+    <color name="log_tag_color">#007bce</color>
+    <color name="log_background_color">#ecf0f1</color>
+
+    <color name="log_button_color">#64c4af</color>
+</resources>
