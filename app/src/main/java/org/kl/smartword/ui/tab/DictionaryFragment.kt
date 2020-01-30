@@ -1,11 +1,11 @@
 package org.kl.smartword.ui.tab
 
 import android.os.Bundle
-import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+
 import androidx.fragment.app.Fragment
 
 import org.kl.smartword.R

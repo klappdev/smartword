@@ -23,16 +23,22 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         this.tabLayout = findViewById(R.id.tabs)
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.main_tab))
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.dictionary_tab))
-        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+        with(tabLayout) {
+            addTab(newTab().setText(R.string.main_tab))
+            addTab(newTab().setText(R.string.dictionary_tab))
+
+            tabGravity = TabLayout.GRAVITY_FILL
+        }
 
         this.pagerAdapter = SectionPagerAdapter(2, supportFragmentManager)
 
         this.viewPager = findViewById(R.id.page_container)
-        viewPager.offscreenPageLimit = 2
-        viewPager.adapter = pagerAdapter
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-        viewPager.addOnPageChangeListener(ChangeTabEvent(pagerAdapter))
+        with(viewPager) {
+            offscreenPageLimit = 2
+            adapter = pagerAdapter
+
+            addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+            /*addOnPageChangeListener(ChangeTabEvent(pagerAdapter))*/
+        }
     }
 }

@@ -7,12 +7,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.kl.smartword.ui.tab.DictionaryFragment">
+    android:orientation="vertical"
+    tools:context="org.kl.smartword.ui.tab.TopicFragment">
 
-    <ListView
-        android:id="@+id/lesson_list_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/topic_recycle_view"
         android:paddingTop="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
