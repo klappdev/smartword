@@ -6,9 +6,11 @@ enum class TabOrder(val position: Int) {
     /*SETTING_TAB*/
 
     companion object {
+        @JvmStatic
         private val cache: Map<Int, TabOrder> = values().associateBy(TabOrder::position)
 
-        internal fun findBy(position: Int) : TabOrder {
+        @JvmStatic
+        fun findBy(position: Int) : TabOrder {
             return cache[position] ?: error("Unknown tab order")
         }
     }

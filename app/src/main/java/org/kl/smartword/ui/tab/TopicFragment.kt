@@ -50,11 +50,11 @@ class TopicFragment(var hidden: Boolean = false) : Fragment() {
 
     private fun initLessons() {
         listLessons = arrayListOf(
-            Lesson(1, R.drawable.lesson_background,   "Drawing", DateUtil.currentDateTime()),
-            Lesson(2, R.drawable.lesson_background_1, "Geometry", DateUtil.currentDateTime()),
-            Lesson(3, R.drawable.lesson_background_2, "Music", DateUtil.currentDateTime()),
-            Lesson(4, R.drawable.lesson_background_3, "Math", DateUtil.currentDateTime()),
-            Lesson(5, R.drawable.lesson_background_4, "Computer", DateUtil.currentDateTime())
+            Lesson(1, R.drawable.lesson_background,   "Drawing", "", DateUtil.currentDateTime(), true),
+            Lesson(2, R.drawable.lesson_background_1, "Geometry", "", DateUtil.currentDateTime(), true),
+            Lesson(3, R.drawable.lesson_background_2, "Music", "", DateUtil.currentDateTime(), true),
+            Lesson(4, R.drawable.lesson_background_3, "Math", "", DateUtil.currentDateTime(), true),
+            Lesson(5, R.drawable.lesson_background_4, "Computer", "", DateUtil.currentDateTime(), true)
         )
     }
 }

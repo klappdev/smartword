@@ -6,6 +6,5 @@ data class Lesson(var id: Int,
                   var description: String,
                   var date: String,
                   var selected: Boolean) {
-    constructor(id: Int, icon: Int, name: String, date: String) :
-                this(id, icon, name, "", date, false)
+    constructor() : this(0, 0, "", "", "", false)
 }
