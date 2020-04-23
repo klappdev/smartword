@@ -12,8 +12,6 @@ import org.kl.smartword.R
 import org.kl.smartword.db.LessonDB
 import org.kl.smartword.ui.adapter.TopicAdapter
 
-private const val ARG_SECTION_NUMBER: String = "main_number"
-
 class TopicFragment(var hidden: Boolean = false) : Fragment() {
     private lateinit var fragmentContext: Context
 
@@ -26,15 +24,15 @@ class TopicFragment(var hidden: Boolean = false) : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_topic, container, false)
         setHasOptionsMenu(true)
 
-        val topicRecyclerView = rootView.findViewById<RecyclerView>(R.id.topic_recycle_view)
+        val topicRecyclerView = rootView.findViewById<RecyclerView?>(R.id.topic_recycle_view)
 
         val layoutManager = GridLayoutManager(context, 2)
-        topicRecyclerView.layoutManager = layoutManager
+        topicRecyclerView?.layoutManager = layoutManager
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 
         val topicAdapter = TopicAdapter(rootView.context, lessonDB.getAll())
-        topicRecyclerView.adapter = topicAdapter
+        topicRecyclerView?.adapter = topicAdapter
 
         return rootView
     }

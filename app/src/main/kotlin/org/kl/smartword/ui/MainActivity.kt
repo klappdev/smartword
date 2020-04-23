@@ -1,21 +1,28 @@
 package org.kl.smartword.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+
 import org.kl.smartword.R
 import org.kl.smartword.db.LessonDB
+import org.kl.smartword.ui.adapter.DictionaryAdapter
 import org.kl.smartword.ui.adapter.SectionPagerAdapter
+import org.kl.smartword.ui.tab.DictionaryFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pagerAdapter: SectionPagerAdapter
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var toolbar: Toolbar
+    private lateinit var addLessonButton: FloatingActionButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -42,6 +49,14 @@ class MainActivity : AppCompatActivity() {
             addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
             /*addOnPageChangeListener(ChangeTabEvent(pagerAdapter))*/
         }
+
+        this.addLessonButton = findViewById(R.id.add_lesson_button)
+        this.addLessonButton.setOnClickListener(::clickAddLesson)
+    }
+
+    private fun clickAddLesson(view: View?) {
+        val intent = Intent(this, AddLessonActivity::class.java)
+        this.startActivity(intent)
     }
 
     override fun onDestroy() {

@@ -33,9 +33,9 @@ class TopicAdapter : RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
             private set
 
         constructor(itemView: View) : super(itemView) {
-            topicCardView = itemView.findViewById(R.id.topic_card_view)
-            topicImage = itemView.findViewById(R.id.item_topic_image)
-            nameTextView = itemView.findViewById(R.id.name_text_view)
+            this.topicCardView = itemView.findViewById(R.id.topic_card_view)
+            this.topicImage = itemView.findViewById(R.id.item_topic_image)
+            this.nameTextView = itemView.findViewById(R.id.name_text_view)
         }
     }
 

@@ -32,7 +32,7 @@ class WordDB : SQLiteOpenHelper {
         }
     }   
 	
-	private constructor(context: Context?) : super(context, "smartword", null, 1)
+	private constructor(context: Context?) : super(context, "smartword.db", null, 1)
 	
 	override fun onCreate(database: SQLiteDatabase?) {
         database?.execSQL("""CREATE TABLE word (

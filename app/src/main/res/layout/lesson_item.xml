@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -8,23 +9,25 @@
     android:paddingBottom="2dp"
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
-    android:minHeight="48dp">
+    android:minHeight="64dp">
 
     <ImageView
         android:id="@+id/item_lesson_image"
-        android:paddingTop="5dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
         android:paddingLeft="8dp"
+        android:paddingTop="10dp"
         android:paddingRight="8dp"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/lesson_icon"
-        android:layout_weight="1" />
+        android:src="@drawable/lesson_icon" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="24dp"
         android:paddingRight="4dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="4dp"
         android:layout_weight="4"
         android:orientation="vertical">
 
@@ -67,9 +70,12 @@
 
             <ImageView
                 android:id="@+id/edit_image"
+				android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="4dp"
+				android:paddingStart="4dp"
+                android:paddingRight="4dp"                
+                android:paddingEnd="4dp"
 
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -83,9 +89,12 @@
 
             <ImageView
                 android:id="@+id/delete_image"
+				android:layout_marginTop="5dp"				
                 android:paddingTop="5dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="5dp"
+               android:paddingLeft="4dp"
+				android:paddingStart="4dp"
+                android:paddingRight="4dp"                
+                android:paddingEnd="4dp"
 
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -95,7 +104,7 @@
                 android:focusable="true"
                 android:background="?selectableItemBackgroundBorderless"
 
-                android:src="@drawable/delete_icon"/>
+                android:src="@drawable/delete_icon" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

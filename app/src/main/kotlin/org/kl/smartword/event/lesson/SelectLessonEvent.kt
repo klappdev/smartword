@@ -8,8 +8,6 @@ import android.widget.Toast
 import org.kl.smartword.R
 import org.kl.smartword.ui.adapter.DictionaryAdapter
 
-private const val TAG = "TAG-SLE"
-
 class SelectLessonEvent : AdapterView.OnItemLongClickListener {
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
@@ -29,7 +27,7 @@ class SelectLessonEvent : AdapterView.OnItemLongClickListener {
 
         baseAdapter.notifyDataSetChanged()
 
-        Log.i(TAG, "Lesson was long clicked!")
+        Log.i("TAG-SLE", "Lesson was long clicked!")
 
         return true
     }
