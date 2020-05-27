@@ -10,6 +10,7 @@ import android.widget.TextView
 
 import org.kl.smartword.bean.Lesson
 import org.kl.smartword.R
+import org.kl.smartword.event.lesson.DeleteLessonEvent
 
 class DictionaryAdapter : BaseAdapter {
     private var context: Context
@@ -59,6 +60,8 @@ class DictionaryAdapter : BaseAdapter {
 
         holder.nameTextView?.text = lesson.name
         holder.dateTextView?.text = lesson.date
+        holder.deleteImageView?.setOnClickListener(DeleteLessonEvent(this, lesson))
+
 
         if (lesson.selected) {
             holder.itemImageView?.setImageResource(R.drawable.lesson_selected_icon)
