@@ -8,9 +8,9 @@ import org.kl.smartword.R
 import org.kl.smartword.event.lesson.AddLessonEvent
 
 class AddLessonActivity : AppCompatActivity() {
-    lateinit var nameTextView: TextView
+    internal lateinit var nameTextView: TextView
         private set
-    lateinit var descriptionTextView: TextView
+    internal lateinit var descriptionTextView: TextView
         private set
     private lateinit var addButton: Button
 

@@ -15,14 +15,11 @@ import org.kl.smartword.bean.Lesson
 
 class TopicAdapter : RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
     private var context: Context
-    private var inflater: LayoutInflater
-    private var listLessons: List<Lesson>
+    internal var listLessons: List<Lesson>
 
     constructor(context: Context, list: List<Lesson>) {
         this.context = context
         this.listLessons = list
-
-        this.inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
     class TopicViewHolder : RecyclerView.ViewHolder {

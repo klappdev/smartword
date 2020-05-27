@@ -13,7 +13,7 @@ import org.kl.smartword.R
 
 class DictionaryAdapter : BaseAdapter {
     private var context: Context
-    var listLessons: List<Lesson>
+    internal var listLessons: List<Lesson>
 
     constructor(context: Context, list: List<Lesson>) {
         this.context = context

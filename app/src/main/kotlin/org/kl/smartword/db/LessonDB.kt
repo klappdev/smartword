@@ -95,12 +95,46 @@ class LessonDB : SQLiteOpenHelper {
         Log.d(TAG, "Updated row table: ${lesson.id}")
     }
 
+    fun updateAll(vararg lessons: Lesson) {
+        lessons.forEach { update(it) }
+    }
+
     fun delete(id: Int) {
         database?.delete("lesson", "id = ?", arrayOf(id.toString()))
 
         Log.d(TAG, "Deleted row table: $id")
     }
 
+    fun countRows(): Int {
+        var result = 0
+        val cursor = database?.rawQuery("SELECT COUNT(*) FROM lesson", null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getInt(0)
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        return result
+    }
+
+    fun checkIfExists(name: String) : Boolean {
+        var result = false
+        val cursor = database?.rawQuery("SELECT * FROM lesson WHERE name=?", arrayOf(name.trim()))
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = true
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        return result
+    }
+    
     fun get(id: Int): Lesson {
         val arguments = arrayOf(id.toString())
         val cursor = database?.query("lesson", null, "id = ?", arguments, null, null, null)        

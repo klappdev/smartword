@@ -17,9 +17,8 @@ import org.kl.smartword.util.formatted
 import java.util.*
 
 class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
-    lateinit var lessonListView: ListView
-        private set
-    private lateinit var adapter: DictionaryAdapter
+    private lateinit var dictionaryListView: ListView
+    private lateinit var dictionaryAdapter: DictionaryAdapter
     private lateinit var fragmentContext: Context
 
     override fun onAttach(context: Context) {
@@ -43,15 +42,14 @@ class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_dictionary, container, false)
         setHasOptionsMenu(true) 
 
-        lessonListView = rootView.findViewById(R.id.lesson_list_view)
-
-        lessonListView.choiceMode = ListView.CHOICE_MODE_SINGLE
-        lessonListView.onItemLongClickListener = SelectLessonEvent()
+        this.dictionaryListView = rootView.findViewById(R.id.lesson_list_view)
+        dictionaryListView.choiceMode = ListView.CHOICE_MODE_SINGLE
+        dictionaryListView.onItemLongClickListener = SelectLessonEvent()
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 		
-        this.adapter = DictionaryAdapter(rootView.context, lessonDB.getAll())
-        lessonListView.adapter = adapter
+        this.dictionaryAdapter = DictionaryAdapter(rootView.context, lessonDB.getAll())
+        dictionaryListView.adapter = dictionaryAdapter
 
         return rootView
     }
@@ -61,9 +59,9 @@ class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 
-        adapter.listLessons = lessonDB.getAll()
-        adapter.notifyDataSetChanged()
-
-        Toast.makeText(activity, "Updated list lessons", Toast.LENGTH_LONG).show()
+        if (lessonDB.countRows() != dictionaryAdapter.listLessons.size) {
+            dictionaryAdapter.listLessons = lessonDB.getAll()
+            dictionaryAdapter.notifyDataSetChanged()
+        }
     }
 }
