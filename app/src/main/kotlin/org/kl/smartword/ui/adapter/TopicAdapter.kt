@@ -12,28 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import org.kl.smartword.R
 
 import org.kl.smartword.bean.Lesson
+import org.kl.smartword.ui.holder.TopicViewHolder
 
-class TopicAdapter : RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
+class TopicAdapter : RecyclerView.Adapter<TopicViewHolder> {
     private var context: Context
     internal var listLessons: List<Lesson>
 
     constructor(context: Context, list: List<Lesson>) {
         this.context = context
         this.listLessons = list
-    }
-
-    class TopicViewHolder : RecyclerView.ViewHolder {
-        private var topicCardView: CardView? = null
-        var topicImage: ImageView? = null
-            private set
-        var nameTextView: TextView? = null
-            private set
-
-        constructor(itemView: View) : super(itemView) {
-            this.topicCardView = itemView.findViewById(R.id.topic_card_view)
-            this.topicImage = itemView.findViewById(R.id.item_topic_image)
-            this.nameTextView = itemView.findViewById(R.id.name_text_view)
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {

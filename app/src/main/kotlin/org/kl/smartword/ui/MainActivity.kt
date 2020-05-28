@@ -11,9 +11,8 @@ import com.google.android.material.tabs.TabLayout
 
 import org.kl.smartword.R
 import org.kl.smartword.db.LessonDB
-import org.kl.smartword.ui.adapter.DictionaryAdapter
+import org.kl.smartword.event.tab.ChangeTabListener
 import org.kl.smartword.ui.adapter.SectionPagerAdapter
-import org.kl.smartword.ui.tab.DictionaryFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pagerAdapter: SectionPagerAdapter
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var addLessonButton: FloatingActionButton
 
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             adapter = pagerAdapter
 
             addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-            /*addOnPageChangeListener(ChangeTabEvent(pagerAdapter))*/
+            addOnPageChangeListener(ChangeTabListener(pagerAdapter, this.context))
         }
 
         this.addLessonButton = findViewById(R.id.add_lesson_button)

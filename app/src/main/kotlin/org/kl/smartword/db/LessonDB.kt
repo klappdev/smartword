@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import org.kl.smartword.bean.Lesson
+import org.kl.smartword.state.LessonState
 
 class LessonDB : SQLiteOpenHelper {
+    private constructor(context: Context?) : super(context, "smartword.db", null, 1)
+
 	companion object {
         private const val TAG = "TAG-LDB"
 
@@ -32,8 +35,6 @@ class LessonDB : SQLiteOpenHelper {
             return instance!!
         }
     }   
-
-    private constructor(context: Context?) : super(context, "smartword.db", null, 1)
 
     override fun onCreate(database: SQLiteDatabase?) {
         database?.execSQL("""CREATE TABLE lesson (

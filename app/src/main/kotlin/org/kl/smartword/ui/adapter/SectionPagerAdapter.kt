@@ -14,19 +14,9 @@ class SectionPagerAdapter(private val size: Int, manager: FragmentManager) :
       FragmentStatePagerAdapter(manager) {
 
     override fun getItem(position: Int): Fragment {
-        Log.i("TAG-SPA", "Tab click: $position")
-
         return when (TabOrder.findBy(position)) {
-            MAIN_TAB -> {
-                Log.i("TAG-SPA", "Tab main was selected!")
-
-                TopicFragment()
-            }
-            DICT_TAB -> {
-                Log.i("TAG-SPA", "Tab dictionary was selected!")
-
-                DictionaryFragment()
-            }
+            MAIN_TAB -> TopicFragment()
+            DICT_TAB -> DictionaryFragment()
         }
     }
 

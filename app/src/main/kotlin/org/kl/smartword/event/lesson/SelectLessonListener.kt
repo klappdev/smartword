@@ -8,7 +8,7 @@ import android.widget.Toast
 import org.kl.smartword.R
 import org.kl.smartword.ui.adapter.DictionaryAdapter
 
-class SelectLessonEvent : AdapterView.OnItemLongClickListener {
+class SelectLessonListener : AdapterView.OnItemLongClickListener {
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         val baseAdapter = parent?.adapter as DictionaryAdapter

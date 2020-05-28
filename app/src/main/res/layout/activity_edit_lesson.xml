@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".ui.AddLessonActivity">
+    tools:context=".ui.EditLessonActivity">
 
     <ImageView
         android:id="@+id/item_lesson_image"
@@ -53,7 +53,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/add_lesson_button"
+            android:id="@+id/edit_lesson_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -62,7 +62,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginBottom="8dp"
 
-            android:text="@string/add_title"
+            android:text="@string/edit_title"
             app:backgroundTint="@color/colorPrimary"
             android:textColor="@android:color/white"
 

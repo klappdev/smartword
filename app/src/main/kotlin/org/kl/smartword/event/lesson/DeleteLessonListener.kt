@@ -10,7 +10,8 @@ import org.kl.smartword.bean.Lesson
 import org.kl.smartword.db.LessonDB
 import org.kl.smartword.ui.adapter.DictionaryAdapter
 
-class DeleteLessonEvent(private val adapter: DictionaryAdapter, private val lesson: Lesson) : View.OnClickListener {
+class DeleteLessonListener(private val adapter: DictionaryAdapter,
+                           private val lesson: Lesson) : View.OnClickListener {
     private lateinit var context: Context
 
     override fun onClick(view: View?) {
@@ -22,7 +23,7 @@ class DeleteLessonEvent(private val adapter: DictionaryAdapter, private val less
               .setCancelable(false)
               .setIcon(android.R.drawable.ic_dialog_alert)
               .setPositiveButton("Yes", ::clickPositiveButton)
-              .setNegativeButton("No", ::clickNegativeButton)
+              .setNegativeButton("No",  ::clickNegativeButton)
         dialog.show()
     }
 
@@ -34,7 +35,7 @@ class DeleteLessonEvent(private val adapter: DictionaryAdapter, private val less
         adapter.notifyDataSetChanged()
 
         Toast.makeText(context, "Delete lesson: ${lesson.name}", Toast.LENGTH_LONG)
-            .show()
+             .show()
     }
 
     private fun clickNegativeButton(dialog: DialogInterface, id: Int) {

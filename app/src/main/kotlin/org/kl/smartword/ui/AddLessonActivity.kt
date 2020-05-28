@@ -5,7 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.kl.smartword.R
-import org.kl.smartword.event.lesson.AddLessonEvent
+import org.kl.smartword.event.lesson.AddLessonListener
 
 class AddLessonActivity : AppCompatActivity() {
     internal lateinit var nameTextView: TextView
@@ -22,7 +22,7 @@ class AddLessonActivity : AppCompatActivity() {
         this.descriptionTextView = findViewById(R.id.description_lesson_text_view)
         this.addButton = findViewById(R.id.add_lesson_button)
 
-        addButton.setOnClickListener(AddLessonEvent(this))
+        addButton.setOnClickListener(AddLessonListener(this))
     }
 }
 

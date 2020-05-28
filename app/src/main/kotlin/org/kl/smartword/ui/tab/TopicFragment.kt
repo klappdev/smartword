@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.kl.smartword.R
 import org.kl.smartword.db.LessonDB
+import org.kl.smartword.state.LessonState
 import org.kl.smartword.ui.adapter.TopicAdapter
 
-class TopicFragment(var hidden: Boolean = false) : Fragment() {
+class TopicFragment : Fragment() {
     private lateinit var topicRecyclerView: RecyclerView
     private lateinit var topicAdapter: TopicAdapter
     private lateinit var fragmentContext: Context
@@ -45,9 +46,10 @@ class TopicFragment(var hidden: Boolean = false) : Fragment() {
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 
-        if (lessonDB.countRows() != topicAdapter.listLessons.size) {
-            topicAdapter.listLessons = lessonDB.getAll()
-            topicAdapter.notifyDataSetChanged()
-        }
+        topicAdapter.listLessons = lessonDB.getAll()
+        topicAdapter.notifyDataSetChanged()
+
+        Toast.makeText(activity, "Resume topic fragment", Toast.LENGTH_LONG)
+             .show()
     }
 }

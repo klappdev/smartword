@@ -1,47 +1,25 @@
 package org.kl.smartword.ui.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
 
 import org.kl.smartword.bean.Lesson
 import org.kl.smartword.R
-import org.kl.smartword.event.lesson.DeleteLessonEvent
+import org.kl.smartword.event.lesson.DeleteLessonListener
+import org.kl.smartword.ui.EditLessonActivity
+import org.kl.smartword.ui.holder.DictionaryViewHolder
 
 class DictionaryAdapter : BaseAdapter {
-    private var context: Context
     internal var listLessons: List<Lesson>
+    private var context: Context
 
     constructor(context: Context, list: List<Lesson>) {
         this.context = context
         this.listLessons = list
-    }
-
-    class DictionaryViewHolder {
-        var nameTextView: TextView? = null
-            private set
-        var dateTextView: TextView? = null
-            private set
-
-        var itemImageView: ImageView? = null
-            private set
-        var editImageView: ImageView? = null
-            private set
-        var deleteImageView: ImageView? = null
-            private set
-
-        constructor(itemView: View) {
-            this.nameTextView = itemView.findViewById(R.id.name_text_view)
-            this.dateTextView = itemView.findViewById(R.id.date_text_view)
-
-            this.itemImageView = itemView.findViewById(R.id.item_lesson_image)
-            this.editImageView = itemView.findViewById(R.id.edit_image)
-            this.deleteImageView = itemView.findViewById(R.id.delete_image)
-        }
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -60,8 +38,10 @@ class DictionaryAdapter : BaseAdapter {
 
         holder.nameTextView?.text = lesson.name
         holder.dateTextView?.text = lesson.date
-        holder.deleteImageView?.setOnClickListener(DeleteLessonEvent(this, lesson))
 
+        holder.editImageView?.tag = lesson.id
+        holder.editImageView?.setOnClickListener(::clickEditLesson)
+        holder.deleteImageView?.setOnClickListener(DeleteLessonListener(this, lesson))
 
         if (lesson.selected) {
             holder.itemImageView?.setImageResource(R.drawable.lesson_selected_icon)
@@ -81,4 +61,11 @@ class DictionaryAdapter : BaseAdapter {
     override fun getItem(position: Int) = listLessons[position]
     override fun getItemId(position: Int) = position.toLong()
     override fun getCount() = listLessons.size
+
+    private fun clickEditLesson(view: View?) {
+        val intent = Intent(context, EditLessonActivity::class.java)
+        intent.putExtra("id_lesson", view?.tag as Int)
+
+        context.startActivity(intent)
+    }
 }

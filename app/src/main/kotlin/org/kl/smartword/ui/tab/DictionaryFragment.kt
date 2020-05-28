@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import org.kl.smartword.R
 import org.kl.smartword.bean.Lesson
 import org.kl.smartword.db.LessonDB
-import org.kl.smartword.event.lesson.SelectLessonEvent
+import org.kl.smartword.event.lesson.SelectLessonListener
+import org.kl.smartword.state.LessonState
 import org.kl.smartword.ui.adapter.DictionaryAdapter
 import org.kl.smartword.util.formatted
 import java.util.*
 
-class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
+class DictionaryFragment : Fragment() {
     private lateinit var dictionaryListView: ListView
     private lateinit var dictionaryAdapter: DictionaryAdapter
     private lateinit var fragmentContext: Context
@@ -43,7 +45,7 @@ class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
 
         this.dictionaryListView = rootView.findViewById(R.id.lesson_list_view)
         dictionaryListView.choiceMode = ListView.CHOICE_MODE_SINGLE
-        dictionaryListView.onItemLongClickListener = SelectLessonEvent()
+        dictionaryListView.onItemLongClickListener = SelectLessonListener()
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 		
@@ -58,9 +60,10 @@ class DictionaryFragment(var hidden: Boolean = false) : Fragment() {
 
         val lessonDB = LessonDB.getInstance(fragmentContext)
 
-        if (lessonDB.countRows() != dictionaryAdapter.listLessons.size) {
-            dictionaryAdapter.listLessons = lessonDB.getAll()
-            dictionaryAdapter.notifyDataSetChanged()
-        }
+        dictionaryAdapter.listLessons = lessonDB.getAll()
+        dictionaryAdapter.notifyDataSetChanged()
+
+        Toast.makeText(activity, "Resume dictionary fragment", Toast.LENGTH_LONG)
+             .show()
     }
 }
