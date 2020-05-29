@@ -38,6 +38,7 @@ class WordDB : SQLiteOpenHelper {
         database?.execSQL("""CREATE TABLE word (
                              id INTEGER PRIMARY KEY AUTOINCREMENT,
 							 id_lesson INTEGER NOT NULL, 
+                             icon INTEGER NOT NULL, 
                              name TEXT NOT NULL,
                              transcription TEXT NOT NULL,
                              translation TEXT NOT NULL,							 
@@ -46,7 +47,8 @@ class WordDB : SQLiteOpenHelper {
 							 etymology TEXT NOT NULL,
 							 other_form TEXT NOT NULL,
 							 antonym TEXT NOT NULL,
-							 irregular TEXT NOT NULL);
+							 irregular TEXT NOT NULL,
+                             selected INTEGER NOT NULL DEFAULT 0 CHECK(selected IN (0,1)));
                           """)
 
         Log.d(TAG, "Create table word")
@@ -64,6 +66,7 @@ class WordDB : SQLiteOpenHelper {
     fun add(word: Word) {
         val values = ContentValues()
         values.put("id_lesson", word.idLesson)
+        values.put("icon", word.icon)
         values.put("name", word.name)
         values.put("transcription", word.transcription)
         values.put("translation", word.translation)
@@ -73,6 +76,7 @@ class WordDB : SQLiteOpenHelper {
         values.put("other_form", word.otherForm)
         values.put("antonym", word.antonym)
         values.put("irregular", word.irregular)
+        values.put("selected", word.selected)
 
         val rowId = database?.insert("word", null, values)
 
@@ -82,6 +86,7 @@ class WordDB : SQLiteOpenHelper {
     fun update(word: Word) {
         val values = ContentValues()
         values.put("id_lesson", word.idLesson)
+        values.put("icon", word.icon)
         values.put("name", word.name)
         values.put("transcription", word.transcription)
         values.put("translation", word.translation)
@@ -91,6 +96,7 @@ class WordDB : SQLiteOpenHelper {
         values.put("other_form", word.otherForm)
         values.put("antonym", word.antonym)
         values.put("irregular", word.irregular)
+        values.put("selected", word.selected)
 
         database?.update("word", values, "id = ?", arrayOf(word.id.toString()))
 
@@ -111,6 +117,7 @@ class WordDB : SQLiteOpenHelper {
             if (cursor != null && cursor.moveToFirst()) {
                 return Word(cursor.getInt(cursor.getColumnIndex("id")),
                             cursor.getInt(cursor.getColumnIndex("id_lesson")),
+                            cursor.getInt(cursor.getColumnIndex("icon")),
                             cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("transcription")),
                             cursor.getString(cursor.getColumnIndex("translation")),
@@ -119,7 +126,8 @@ class WordDB : SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex("etymology")),
                             cursor.getString(cursor.getColumnIndex("other_form")),
                             cursor.getString(cursor.getColumnIndex("antonym")),
-                            cursor.getString(cursor.getColumnIndex("irregular"))
+                            cursor.getString(cursor.getColumnIndex("irregular")),
+                            cursor.getInt(cursor.getColumnIndex("selected")) != 0
                 )
             }
         } finally {
@@ -133,7 +141,7 @@ class WordDB : SQLiteOpenHelper {
 
     fun getAll(): List<Word> {
         val words = mutableListOf<Word>()
-        val cursor = database?.query("lesson", null, null, null, null, null, null)
+        val cursor = database?.query("word", null, null, null, null, null, null)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -141,6 +149,7 @@ class WordDB : SQLiteOpenHelper {
                     words += Word(
                         cursor.getInt(cursor.getColumnIndex("id")),
                         cursor.getInt(cursor.getColumnIndex("id_lesson")),
+                        cursor.getInt(cursor.getColumnIndex("icon")),
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("transcription")),
                         cursor.getString(cursor.getColumnIndex("translation")),
@@ -149,7 +158,8 @@ class WordDB : SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex("etymology")),
                         cursor.getString(cursor.getColumnIndex("other_form")),
                         cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular"))
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getInt(cursor.getColumnIndex("selected")) != 0
                     )
                 } while (cursor.moveToNext())
             }

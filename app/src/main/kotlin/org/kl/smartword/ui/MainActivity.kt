@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout
 
 import org.kl.smartword.R
 import org.kl.smartword.db.LessonDB
+import org.kl.smartword.db.WordDB
 import org.kl.smartword.event.tab.ChangeTabListener
 import org.kl.smartword.ui.adapter.SectionPagerAdapter
 
@@ -62,5 +63,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         LessonDB.getInstance(applicationContext).close()
+        WordDB.getInstance(applicationContext).close()
     }
 }

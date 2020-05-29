@@ -12,12 +12,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.WordsActivity"
+            android:label="@string/words_name">
+        </activity>
+        <activity
             android:name=".ui.EditLessonActivity"
             android:label="@string/edit_lesson_name">
+
         </activity>
         <activity
             android:name=".ui.AddLessonActivity"
             android:label="@string/add_lesson_name">
+
         </activity>
         <activity
             android:name=".ui.MainActivity"
@@ -25,7 +31,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

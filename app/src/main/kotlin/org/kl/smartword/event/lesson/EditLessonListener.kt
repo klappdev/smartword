@@ -16,7 +16,6 @@ class EditLessonListener(private val activity: EditLessonActivity,
         val lessonDB = LessonDB.getInstance(activity.applicationContext)
 
         if (!ViewValidator.validate(nameField, "Name is empty") ||
-            !ViewValidator.validate(nameField, "Lesson already exists", lessonDB::checkIfExists) ||
             !ViewValidator.validate(descriptionField, "Description is empty")) {
             return
         }

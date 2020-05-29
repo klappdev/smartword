@@ -14,7 +14,7 @@ class AddLessonListener(private val activity: AddLessonActivity) : View.OnClickL
     private val nameField = activity.nameTextView
     private val descriptionField = activity.descriptionTextView
 
-    override fun onClick(v: View?) {
+    override fun onClick(view: View?) {
         val lessonDB = LessonDB.getInstance(activity.applicationContext)
 
         if (!ViewValidator.validate(nameField, "Name is empty") ||

@@ -8,7 +8,7 @@ import org.kl.smartword.state.TabOrder.*
 
 import org.kl.smartword.ui.adapter.SectionPagerAdapter
 import org.kl.smartword.ui.tab.DictionaryFragment
-import org.kl.smartword.ui.tab.TopicFragment
+import org.kl.smartword.ui.tab.TopicsFragment
 
 class ChangeTabListener(private val pageAdapter: SectionPagerAdapter,
                         private val context: Context) : ViewPager.OnPageChangeListener {
@@ -18,7 +18,7 @@ class ChangeTabListener(private val pageAdapter: SectionPagerAdapter,
 
         when (TabOrder.findBy(position)) {
             MAIN_TAB -> {
-                val fragment = pageAdapter.getItem(position) as TopicFragment
+                val fragment = pageAdapter.getItem(position) as TopicsFragment
 
                 /*fragment.updateTopicContents(context, adapter)*/
             }
