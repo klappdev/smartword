@@ -10,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 
 import org.kl.smartword.R
+import org.kl.smartword.db.DatabaseHelper
 import org.kl.smartword.db.LessonDB
 import org.kl.smartword.db.WordDB
 import org.kl.smartword.event.tab.ChangeTabListener
@@ -17,6 +18,8 @@ import org.kl.smartword.ui.adapter.SectionPagerAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pagerAdapter: SectionPagerAdapter
+    private lateinit var dbHelper: DatabaseHelper
+
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var toolbar: Toolbar
@@ -50,6 +53,8 @@ class MainActivity : AppCompatActivity() {
             addOnPageChangeListener(ChangeTabListener(pagerAdapter, this.context))
         }
 
+        this.dbHelper = DatabaseHelper(applicationContext)
+
         this.addLessonButton = findViewById(R.id.add_lesson_button)
         this.addLessonButton.setOnClickListener(::clickAddLesson)
     }
@@ -62,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        LessonDB.getInstance(applicationContext).close()
-        WordDB.getInstance(applicationContext).close()
+        this.dbHelper.close()
     }
 }

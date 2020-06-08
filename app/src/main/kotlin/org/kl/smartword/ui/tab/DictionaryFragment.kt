@@ -31,10 +31,8 @@ class DictionaryFragment : Fragment() {
         super.onAttach(context)
         this.fragmentContext = context
 
-        val lessonDB = LessonDB.getInstance(fragmentContext)
-
-        if (lessonDB.getAll().size < 5) {
-            lessonDB.addAll(
+        if (LessonDB.getAll().size < 5) {
+            LessonDB.addAll(
                 Lesson(1, R.drawable.lesson_background_1, "Drawing", "", Date().formatted(), false),
                 Lesson(2, R.drawable.lesson_background_2, "Geometry", "", Date().formatted(), false),
                 Lesson(3, R.drawable.lesson_background_3, "Music", "", Date().formatted(), false),
@@ -58,8 +56,7 @@ class DictionaryFragment : Fragment() {
             onItemClickListener = AdapterView.OnItemClickListener(::clickShowWords)
         }
 
-        val lessonDB = LessonDB.getInstance(fragmentContext)
-        dictionaryAdapter = DictionaryAdapter(rootView.context, lessonDB.getAll())
+        dictionaryAdapter = DictionaryAdapter(rootView.context, LessonDB.getAll())
         dictionaryListView.adapter = dictionaryAdapter
 
         return rootView
@@ -68,20 +65,17 @@ class DictionaryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val lessonDB = LessonDB.getInstance(fragmentContext)
-
-        dictionaryAdapter.listLessons = lessonDB.getAll()
+        dictionaryAdapter.listLessons = LessonDB.getAll()
         dictionaryAdapter.notifyDataSetChanged()
-
-        Toast.makeText(activity, "Resume dictionary fragment", Toast.LENGTH_LONG)
-             .show()
     }
 
     private fun clickShowWords(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent(activity, WordsActivity::class.java)
+        intent.putExtra("id_lesson", dictionaryAdapter.getItemId(position).toInt())
+
         this.startActivity(intent)
 
-        Toast.makeText(parent?.context, "Show words selected lesson", Toast.LENGTH_LONG)
+        Toast.makeText(parent?.context, "Show words selected lesson ${dictionaryAdapter.getItemId(position).toInt()}", Toast.LENGTH_LONG)
              .show()
     }
 }

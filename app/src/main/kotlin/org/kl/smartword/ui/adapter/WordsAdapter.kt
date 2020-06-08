@@ -11,7 +11,7 @@ import org.kl.smartword.bean.Word
 import org.kl.smartword.ui.holder.WordsViewHolder
 
 class WordsAdapter : BaseAdapter {
-    private var listWords: List<Word>
+    internal var listWords: List<Word>
     private var context: Context
 
     constructor(context: Context, list: List<Word>) {
@@ -56,6 +56,6 @@ class WordsAdapter : BaseAdapter {
     }
 
     override fun getItem(position: Int) = listWords[position]
-    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemId(position: Int) = listWords[position].id.toLong()
     override fun getCount() = listWords.size
 }

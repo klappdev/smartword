@@ -12,9 +12,7 @@ import org.kl.smartword.state.LessonState
 
 class EditLessonActivity : AppCompatActivity() {
     internal lateinit var nameTextView: TextView
-        private set
     internal lateinit var descriptionTextView: TextView
-        private set
     private lateinit var editButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +25,7 @@ class EditLessonActivity : AppCompatActivity() {
 
         val idLesson = intent.getIntExtra("id_lesson", -1)
 
-        val lessonDB = LessonDB.getInstance(applicationContext)
-        val lesson = lessonDB.get(idLesson)
+        val lesson = LessonDB.get(idLesson)
 
         nameTextView.text = lesson.name
         descriptionTextView.text = lesson.description

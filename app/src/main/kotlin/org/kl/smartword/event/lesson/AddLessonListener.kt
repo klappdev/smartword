@@ -15,10 +15,8 @@ class AddLessonListener(private val activity: AddLessonActivity) : View.OnClickL
     private val descriptionField = activity.descriptionTextView
 
     override fun onClick(view: View?) {
-        val lessonDB = LessonDB.getInstance(activity.applicationContext)
-
         if (!ViewValidator.validate(nameField, "Name is empty") ||
-            !ViewValidator.validate(nameField, "Lesson already exists", lessonDB::checkIfExists) ||
+            !ViewValidator.validate(nameField, "Lesson already exists", LessonDB::checkIfExists) ||
             !ViewValidator.validate(descriptionField, "Description is empty")) {
             return
         }
@@ -30,7 +28,7 @@ class AddLessonListener(private val activity: AddLessonActivity) : View.OnClickL
             date = Date().formatted()
         }
 
-        lessonDB.add(lesson)
+        LessonDB.add(lesson)
         Toast.makeText(activity, "Add lesson: ${lesson.name}", Toast.LENGTH_LONG)
              .show()
     }

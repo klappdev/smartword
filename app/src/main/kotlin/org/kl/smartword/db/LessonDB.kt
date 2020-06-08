@@ -9,54 +9,32 @@ import android.util.Log
 import org.kl.smartword.bean.Lesson
 import org.kl.smartword.state.LessonState
 
-class LessonDB : SQLiteOpenHelper {
-    private constructor(context: Context?) : super(context, "smartword.db", null, 1)
+object LessonDB {
+    private const val TAG = "TAG-LDB"
+    internal var database: SQLiteDatabase? = null
 
-	companion object {
-        private const val TAG = "TAG-LDB"
-
-		@Volatile @JvmStatic
-        private var instance: LessonDB? = null
-
-        @JvmStatic
-		private var database: SQLiteDatabase? = null
-
-        @JvmStatic
-        fun getInstance(context: Context): LessonDB {
-            if (instance == null) {
-                synchronized(LessonDB::class) {
-                    if (instance == null) {
-                        instance = LessonDB(context.applicationContext)
-                        database = instance?.writableDatabase
-                    }
-                }
-			}
-
-            return instance!!
-        }
-    }   
-
-    override fun onCreate(database: SQLiteDatabase?) {
-        database?.execSQL("""CREATE TABLE lesson (
+    fun create(database: SQLiteDatabase?) {
+        database?.execSQL("""CREATE TABLE IF NOT EXISTS lesson (
                              id INTEGER PRIMARY KEY AUTOINCREMENT,
                              icon INTEGER NOT NULL, 
                              name TEXT NOT NULL,
                              description TEXT NOT NULL,
                              date TEXT NOT NULL,
                              selected INTEGER NOT NULL DEFAULT 0 CHECK(selected IN (0,1)));
-                          """)
+                          """
+        )
 
         Log.d(TAG, "Create table lesson")
     }
 
-    override fun onUpgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-		if (oldVersion != newVersion) {
+    fun upgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        if (oldVersion != newVersion) {
             database?.execSQL("DROP TABLE IF EXISTS lesson")
-            onCreate(database)
+            create(database)
         }
 
         Log.d(TAG, "Upgrade table lesson")
-	}
+    }
 
     fun drop() {
         database?.execSQL("DROP TABLE IF EXISTS lesson")
@@ -64,7 +42,7 @@ class LessonDB : SQLiteOpenHelper {
         Log.d(TAG, "Drop table lesson")
     }
 
-	fun add(lesson: Lesson) : Long? {
+    fun add(lesson: Lesson): Long? {
         val values = ContentValues()
         values.put("icon", lesson.icon)
         values.put("name", lesson.name)
@@ -121,7 +99,7 @@ class LessonDB : SQLiteOpenHelper {
         return result
     }
 
-    fun checkIfExists(name: String) : Boolean {
+    fun checkIfExists(name: String): Boolean {
         var result = false
         val cursor = database?.rawQuery("SELECT * FROM lesson WHERE name=?", arrayOf(name.trim()))
 
@@ -135,24 +113,25 @@ class LessonDB : SQLiteOpenHelper {
 
         return result
     }
-    
+
     fun get(id: Int): Lesson {
         val arguments = arrayOf(id.toString())
-        val cursor = database?.query("lesson", null, "id = ?", arguments, null, null, null)        
-		
-		try {
-			if (cursor != null && cursor.moveToFirst()) {
-				return Lesson(cursor.getInt(cursor.getColumnIndex("id")),
-                              cursor.getInt(cursor.getColumnIndex("icon")),
-                              cursor.getString(cursor.getColumnIndex("name")),
-                              cursor.getString(cursor.getColumnIndex("description")),
-                              cursor.getString(cursor.getColumnIndex("date")),
-                              cursor.getInt(cursor.getColumnIndex("selected")) != 0
-				)
-			}
-		} finally {
-			cursor?.close()
-		}
+        val cursor = database?.query("lesson", null, "id = ?", arguments, null, null, null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                return Lesson(
+                    cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getInt(cursor.getColumnIndex("icon")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getString(cursor.getColumnIndex("description")),
+                    cursor.getString(cursor.getColumnIndex("date")),
+                    cursor.getInt(cursor.getColumnIndex("selected")) != 0
+                )
+            }
+        } finally {
+            cursor?.close()
+        }
 
         Log.d(TAG, "Retrieve all row table: $id")
 
@@ -163,31 +142,25 @@ class LessonDB : SQLiteOpenHelper {
         val lessons = mutableListOf<Lesson>()
         val cursor: Cursor? = database?.query("lesson", null, null, null, null, null, null)
 
-		try {
-			if (cursor != null && cursor.moveToFirst()) {
-				do {
-					lessons += Lesson(
-						cursor.getInt(cursor.getColumnIndex("id")),
-						cursor.getInt(cursor.getColumnIndex("icon")),
-						cursor.getString(cursor.getColumnIndex("name")),
-						cursor.getString(cursor.getColumnIndex("description")),
-						cursor.getString(cursor.getColumnIndex("date")),
-						cursor.getInt(cursor.getColumnIndex("selected")) != 0
-					)
-				} while (cursor.moveToNext())
-			}
-		} finally {
-			cursor?.close()
-		}
-		
-		Log.d(TAG, "Retrieve all rows table")
-		
-        return lessons
-    }
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    lessons += Lesson(
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getInt(cursor.getColumnIndex("icon")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("description")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getInt(cursor.getColumnIndex("selected")) != 0
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
 
-	override fun close() {
-        if (instance != null) {
-			database?.close()
-		}            
+        Log.d(TAG, "Retrieve all rows table")
+
+        return lessons
     }
 }

@@ -1,41 +1,16 @@
 package org.kl.smartword.db
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import org.kl.smartword.bean.Word
 
-class WordDB : SQLiteOpenHelper {
-	companion object {
-        private const val TAG = "TAG-WDB"
+object WordDB {
+    private const val TAG = "TAG-WDB"
+    internal var database: SQLiteDatabase? = null
 
-		@Volatile @JvmStatic
-        private var instance: WordDB? = null
-
-        @JvmStatic
-		private var database: SQLiteDatabase? = null
-
-        @JvmStatic
-        fun getInstance(context: Context): WordDB {
-            if (instance == null) {
-                synchronized(WordDB::class) {
-                    if (instance == null) {
-                        instance = WordDB(context.applicationContext)
-                        database = instance?.writableDatabase
-                    }
-                }
-			}
-
-            return instance!!
-        }
-    }   
-	
-	private constructor(context: Context?) : super(context, "smartword.db", null, 1)
-	
-	override fun onCreate(database: SQLiteDatabase?) {
-        database?.execSQL("""CREATE TABLE word (
+	fun create(database: SQLiteDatabase?) {
+        database?.execSQL("""CREATE TABLE IF NOT EXISTS word (
                              id INTEGER PRIMARY KEY AUTOINCREMENT,
 							 id_lesson INTEGER NOT NULL, 
                              icon INTEGER NOT NULL, 
@@ -54,10 +29,10 @@ class WordDB : SQLiteOpenHelper {
         Log.d(TAG, "Create table word")
     }
 	
-	override fun onUpgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+	fun upgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 		if (oldVersion != newVersion) {            
             database?.execSQL("DROP TABLE IF EXISTS word")
-            onCreate(database)
+            create(database)
         }
 
         Log.d(TAG, "Upgrade table word")
@@ -107,6 +82,21 @@ class WordDB : SQLiteOpenHelper {
         database?.delete("word", "id = ?", arrayOf(id.toString()))
 
         Log.d(TAG, "Deleted row table: $id")
+    }
+
+    fun checkIfExists(name: String): Boolean {
+        var result = false
+        val cursor = database?.rawQuery("SELECT * FROM word WHERE name=?", arrayOf(name.trim()))
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = true
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        return result
     }
 
     fun get(id: Int): Word {
@@ -172,9 +162,37 @@ class WordDB : SQLiteOpenHelper {
         return words
     }
 
-    override fun close() {
-        if (instance != null) {
-            database?.close()
+    fun getAllByIdLesson(idLesson: Int): List<Word> {
+        val words = mutableListOf<Word>()
+        val arguments = arrayOf(idLesson.toString())
+        val cursor = database?.query("word", null, "id_lesson = ?", arguments, null, null, null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    words += Word(
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getInt(cursor.getColumnIndex("id_lesson")),
+                        cursor.getInt(cursor.getColumnIndex("icon")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("transcription")),
+                        cursor.getString(cursor.getColumnIndex("translation")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("association")),
+                        cursor.getString(cursor.getColumnIndex("etymology")),
+                        cursor.getString(cursor.getColumnIndex("other_form")),
+                        cursor.getString(cursor.getColumnIndex("antonym")),
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getInt(cursor.getColumnIndex("selected")) != 0
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
         }
+
+        Log.d(TAG, "Retrieve all rows table")
+
+        return words
     }
 }

@@ -9,9 +9,7 @@ import org.kl.smartword.event.lesson.AddLessonListener
 
 class AddLessonActivity : AppCompatActivity() {
     internal lateinit var nameTextView: TextView
-        private set
     internal lateinit var descriptionTextView: TextView
-        private set
     private lateinit var addButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -28,10 +28,9 @@ class DeleteLessonListener(private val adapter: DictionaryAdapter,
     }
 
     private fun clickPositiveButton(dialog: DialogInterface, id: Int) {
-        val lessonDB = LessonDB.getInstance(context)
-        lessonDB.delete(lesson.id)
+        LessonDB.delete(lesson.id)
 
-        adapter.listLessons = lessonDB.getAll()
+        adapter.listLessons = LessonDB.getAll()
         adapter.notifyDataSetChanged()
 
         Toast.makeText(context, "Delete lesson: ${lesson.name}", Toast.LENGTH_LONG)

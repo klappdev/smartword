@@ -1,6 +1,5 @@
 package org.kl.smartword.ui.tab
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,12 +17,6 @@ class TopicsFragment : Fragment() {
     private lateinit var emptyTextView: TextView
     private lateinit var topicRecyclerView: RecyclerView
     private lateinit var topicsAdapter: TopicsAdapter
-    private lateinit var fragmentContext: Context
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.fragmentContext = context
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater.inflate(R.layout.fragment_topic, container, false)
@@ -35,8 +28,7 @@ class TopicsFragment : Fragment() {
         val layoutManager = GridLayoutManager(context, 2)
         topicRecyclerView.layoutManager = layoutManager
 
-        val lessonDB = LessonDB.getInstance(fragmentContext)
-        val listLessons = lessonDB.getAll()
+        val listLessons = LessonDB.getAll()
 
         switchVisibility(listLessons.isNotEmpty())
 
@@ -60,8 +52,7 @@ class TopicsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val lessonDB = LessonDB.getInstance(fragmentContext)
-        val listLessons = lessonDB.getAll()
+        val listLessons = LessonDB.getAll()
 
         switchVisibility(listLessons.isNotEmpty())
 

@@ -13,8 +13,8 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_weight="1"
+        android:layout_marginTop="5dp"
         android:layout_gravity="center"
-
         android:src="@drawable/lesson_icon" />
 
     <EditText

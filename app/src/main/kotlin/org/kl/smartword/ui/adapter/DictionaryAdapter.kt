@@ -59,7 +59,7 @@ class DictionaryAdapter : BaseAdapter {
     }
 
     override fun getItem(position: Int) = listLessons[position]
-    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemId(position: Int) = listLessons[position].id.toLong()
     override fun getCount() = listLessons.size
 
     private fun clickEditLesson(view: View?) {

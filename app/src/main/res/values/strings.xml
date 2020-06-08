@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">smartword</string>
     <string name="action_settings">Settings</string>
+
+    <string name="add_word_name">Add word</string>
     <string name="add_lesson_name">Add lesson</string>
     <string name="edit_lesson_name">Update lesson</string>
     <string name="words_name">List words</string>
@@ -10,6 +12,13 @@
 
     <string name="name_hint">name</string>
     <string name="description_hint">description</string>
+    <string name="transcription_hint">transcription</string>
+    <string name="translation_hint">translation</string>
+    <string name="association_hint">association</string>
+    <string name="etymology_hint">etymology</string>
+    <string name="other_form_hint">other form</string>
+    <string name="antonym_hint">antonym</string>
+    <string name="irregular_hint">irregular</string>
 
     <string name="add_title">Add</string>
     <string name="edit_title">Update</string>
