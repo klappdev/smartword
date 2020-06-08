@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import org.kl.smartword.R
 import org.kl.smartword.bean.Word
+import org.kl.smartword.event.word.DeleteWordListener
 import org.kl.smartword.ui.holder.WordsViewHolder
 
 class WordsAdapter : BaseAdapter {
@@ -38,7 +39,7 @@ class WordsAdapter : BaseAdapter {
 
         holder.editImageView?.tag = word.id
         /*holder.editImageView?.setOnClickListener(::clickEditLesson)*/
-        /*holder.deleteImageView?.setOnClickListener(DeleteWordListener(this, word))*/
+        holder.deleteImageView?.setOnClickListener(DeleteWordListener(this, word))
 
         if (word.selected) {
             holder.itemImageView?.setImageResource(R.drawable.word_selected_icon)

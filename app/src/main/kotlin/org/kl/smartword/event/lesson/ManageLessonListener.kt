@@ -1,10 +1,7 @@
 package org.kl.smartword.event.lesson
 
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
-
 import org.kl.smartword.R
 import org.kl.smartword.ui.adapter.DictionaryAdapter
 
@@ -26,8 +23,6 @@ class ManageLessonListener : AdapterView.OnItemLongClickListener {
         }
 
         baseAdapter.notifyDataSetChanged()
-
-        Log.i("TAG-SLE", "Lesson was long clicked!")
 
         return true
     }

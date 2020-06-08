@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.kl.smartword.R
 import org.kl.smartword.bean.Word
 import org.kl.smartword.db.WordDB
+import org.kl.smartword.event.word.ManageWordListener
 import org.kl.smartword.ui.adapter.WordsAdapter
 import org.kl.smartword.util.formatted
 import java.util.*
@@ -34,7 +35,7 @@ class WordsActivity : AppCompatActivity() {
         with(wordsListView) {
             choiceMode = ListView.CHOICE_MODE_SINGLE
             emptyView = emptyTextView
-            /*onItemLongClickListener = ManageWordListener()*/
+            onItemLongClickListener = ManageWordListener()
             /*onItemClickListener = AdapterView.OnItemClickListener(::clickShowWord)*/
         }
 
