@@ -1,0 +1,10 @@
+package org.kl.smartword.model
+
+data class Lesson(var id: Int,
+                  var icon: Int,
+                  var name: String,
+                  var description: String,
+                  var date: String,
+                  var selected: Boolean) {
+    constructor() : this(0, 0, "", "", "", false)
+}

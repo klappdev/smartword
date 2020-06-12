@@ -12,6 +12,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".ui.EditWordActivity"
+            android:label="@string/edit_word_name">
+        </activity>
+        <activity
             android:name=".ui.AddWordActivity"
             android:label="@string/add_word_name">
         </activity>
