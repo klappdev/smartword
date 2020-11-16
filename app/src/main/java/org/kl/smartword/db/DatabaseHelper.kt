@@ -9,18 +9,18 @@ class DatabaseHelper : SQLiteOpenHelper {
 
     constructor(context: Context?) : super(context, "smartword.db", null, 1) {
         database = this.writableDatabase
-        LessonDB.database = database
-        WordDB.database = database
+        LessonDao.database = database
+        WordDao.database = database
     }
 
     override fun onCreate(database: SQLiteDatabase?) {
-        LessonDB.create(database)
-        WordDB.create(database)
+        LessonDao.create(database)
+        WordDao.create(database)
     }
 
     override fun onUpgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        LessonDB.upgrade(database, oldVersion, newVersion)
-        WordDB.upgrade(database, oldVersion, newVersion)
+        LessonDao.upgrade(database, oldVersion, newVersion)
+        WordDao.upgrade(database, oldVersion, newVersion)
     }
 
     override fun close() {

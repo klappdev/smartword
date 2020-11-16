@@ -1,16 +1,23 @@
-package org.kl.smartword.ui
+package org.kl.smartword.view
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+
 import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.disposables.CompositeDisposable
+
 import org.kl.smartword.R
 import org.kl.smartword.event.lesson.AddLessonListener
 
 class AddLessonActivity : AppCompatActivity() {
-    internal lateinit var nameTextView: TextView
-    internal lateinit var descriptionTextView: TextView
     private lateinit var addButton: Button
+    lateinit var nameTextView: TextView
+        private set
+    lateinit var descriptionTextView: TextView
+        private set
+    var disposables: CompositeDisposable = CompositeDisposable()
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +28,11 @@ class AddLessonActivity : AppCompatActivity() {
         this.addButton = findViewById(R.id.add_lesson_button)
 
         addButton.setOnClickListener(AddLessonListener(this))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }
 

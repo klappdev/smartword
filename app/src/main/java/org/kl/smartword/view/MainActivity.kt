@@ -1,4 +1,4 @@
-package org.kl.smartword.ui
+package org.kl.smartword.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,10 +11,8 @@ import com.google.android.material.tabs.TabLayout
 
 import org.kl.smartword.R
 import org.kl.smartword.db.DatabaseHelper
-import org.kl.smartword.db.LessonDB
-import org.kl.smartword.db.WordDB
 import org.kl.smartword.event.tab.ChangeTabListener
-import org.kl.smartword.ui.adapter.SectionPagerAdapter
+import org.kl.smartword.view.adapter.SectionPagerAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pagerAdapter: SectionPagerAdapter

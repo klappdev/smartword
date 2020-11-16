@@ -1,22 +1,35 @@
-package org.kl.smartword.ui
+package org.kl.smartword.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+
+import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.disposables.CompositeDisposable
+
 import org.kl.smartword.R
 import org.kl.smartword.event.word.AddWordListener
 
 class AddWordActivity : AppCompatActivity() {
-    internal lateinit var nameTextView: TextView
-    internal lateinit var transcriptionTextView: TextView
-    internal lateinit var translationTextView: TextView
-    internal lateinit var associationTextView: TextView
-    internal lateinit var etymologyTextView: TextView
-    internal lateinit var otherFormTextView: TextView
-    internal lateinit var antonymTextView: TextView
-    internal lateinit var irregularTextView: TextView
     private lateinit var addButton: Button
+    lateinit var nameTextView: TextView
+        private set
+    lateinit var transcriptionTextView: TextView
+        private set
+    lateinit var translationTextView: TextView
+        private set
+    lateinit var associationTextView: TextView
+        private set
+    lateinit var etymologyTextView: TextView
+        private set
+    lateinit var otherFormTextView: TextView
+        private set
+    lateinit var antonymTextView: TextView
+        private set
+    lateinit var irregularTextView: TextView
+        private set
+    var disposables: CompositeDisposable = CompositeDisposable()
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +45,12 @@ class AddWordActivity : AppCompatActivity() {
         this.irregularTextView = findViewById(R.id.irregular_word_text_view)
         this.addButton = findViewById(R.id.add_word_button)
 
-        val idLesson = intent.getIntExtra("id_lesson", -1)
+        val idLesson = intent.getLongExtra("id_lesson", -1)
         addButton.setOnClickListener(AddWordListener(this, idLesson))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }

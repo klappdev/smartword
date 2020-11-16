@@ -1,15 +1,22 @@
 package org.kl.smartword.event.word
 
 import android.view.View
-import android.widget.Toast
+import java.util.*
+
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.observers.DisposableCompletableObserver
+import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Word
-import org.kl.smartword.db.WordDB
+import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.validate.ViewValidator
-import org.kl.smartword.ui.EditWordActivity
+import org.kl.smartword.util.formatted
+import org.kl.smartword.util.toast
+import org.kl.smartword.view.EditWordActivity
 
 class EditWordListener(private val activity: EditWordActivity,
-                       private val word: Word) : View.OnClickListener {
+                       private val idWord: Long,
+                       private val idLesson: Long) : View.OnClickListener {
     private val nameField = activity.nameTextView
     private val transcriptionField = activity.transcriptionTextView
     private val translationField = activity.translationTextView
@@ -18,6 +25,7 @@ class EditWordListener(private val activity: EditWordActivity,
     private val otherFormField = activity.otherFormTextView
     private val antonymField = activity.antonymTextView
     private val irregularField = activity.irregularTextView
+    private val disposables = activity.disposables
 
     override fun onClick(view: View?) {
         if (!ViewValidator.validate(nameField, "Name is empty") ||
@@ -31,19 +39,30 @@ class EditWordListener(private val activity: EditWordActivity,
             return
         }
 
-        with (word) {
-            name = nameField.text.toString()
-            transcription = transcriptionField.text.toString()
-            translation = translationField.text.toString()
-            association = associationField.text.toString()
-            etymology = etymologyField.text.toString()
-            otherForm = otherFormField.text.toString()
-            antonym = antonymField.text.toString()
+        val newWord = Word(
+            id = idWord,
+            idLesson = idLesson,
+            name = nameField.text.toString(),
+            transcription = transcriptionField.text.toString(),
+            translation = translationField.text.toString(),
+            date = Date().formatted(),
+            association = associationField.text.toString(),
+            etymology = etymologyField.text.toString(),
+            otherForm = otherFormField.text.toString(),
+            antonym = antonymField.text.toString(),
             irregular = irregularField.text.toString()
-        }
+        )
 
-        WordDB.update(word)
-        Toast.makeText(activity, "Update word: ${word.name}", Toast.LENGTH_LONG)
-             .show()
+        disposables.add(WordDao.update(newWord)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableCompletableObserver() {
+                override fun onError(e: Throwable) {
+                    activity.toast("Can't update word: ${newWord.name}")
+                }
+                override fun onComplete() {
+                    activity.toast("Update word: ${newWord.name}")
+                }
+            }))
     }
 }

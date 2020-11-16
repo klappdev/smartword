@@ -1,4 +1,4 @@
-package org.kl.smartword.ui.adapter
+package org.kl.smartword.view.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -10,12 +10,12 @@ import android.widget.BaseAdapter
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.R
 import org.kl.smartword.event.lesson.DeleteLessonListener
-import org.kl.smartword.ui.EditLessonActivity
-import org.kl.smartword.ui.holder.DictionaryViewHolder
+import org.kl.smartword.view.EditLessonActivity
+import org.kl.smartword.view.holder.DictionaryViewHolder
 
 class DictionaryAdapter : BaseAdapter {
-    internal var listLessons: List<Lesson>
     private var context: Context
+    var listLessons: List<Lesson>
 
     constructor(context: Context, list: List<Lesson>) {
         this.context = context
@@ -36,35 +36,24 @@ class DictionaryAdapter : BaseAdapter {
             holder = view.tag as DictionaryViewHolder
         }
 
-        holder.nameTextView?.text = lesson.name
-        holder.dateTextView?.text = lesson.date
+        with(holder) {
+            editImageView?.tag = lesson.id
+            editImageView?.setOnClickListener(::clickEditLesson)
+            deleteImageView?.setOnClickListener(DeleteLessonListener(this@DictionaryAdapter, lesson))
 
-        holder.editImageView?.tag = lesson.id
-        holder.editImageView?.setOnClickListener(::clickEditLesson)
-        holder.deleteImageView?.setOnClickListener(DeleteLessonListener(this, lesson))
-
-        if (lesson.selected) {
-            holder.itemImageView?.setImageResource(R.drawable.lesson_selected_icon)
-
-            holder.editImageView?.visibility = View.VISIBLE
-            holder.deleteImageView?.visibility = View.VISIBLE
-        } else {
-            holder.itemImageView?.setImageResource(R.drawable.lesson_icon)
-
-            holder.editImageView?.visibility = View.INVISIBLE
-            holder.deleteImageView?.visibility = View.INVISIBLE
+            bind(lesson)
         }
 
         return view
     }
 
     override fun getItem(position: Int) = listLessons[position]
-    override fun getItemId(position: Int) = listLessons[position].id.toLong()
+    override fun getItemId(position: Int) = listLessons[position].id
     override fun getCount() = listLessons.size
 
     private fun clickEditLesson(view: View?) {
         val intent = Intent(context, EditLessonActivity::class.java)
-        intent.putExtra("id_lesson", view?.tag as Int)
+        intent.putExtra("id_lesson", view?.tag as Long)
 
         context.startActivity(intent)
     }

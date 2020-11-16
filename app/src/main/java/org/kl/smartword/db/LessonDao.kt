@@ -4,20 +4,28 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import org.kl.smartword.model.Lesson
 
-object LessonDB {
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.functions.Function
+
+import org.kl.smartword.model.Lesson
+import java.lang.Exception
+import java.util.concurrent.Callable
+
+object LessonDao {
     private const val TAG = "TAG-LDB"
     internal var database: SQLiteDatabase? = null
 
     fun create(database: SQLiteDatabase?) {
         database?.execSQL("""CREATE TABLE IF NOT EXISTS lesson (
                              id INTEGER PRIMARY KEY AUTOINCREMENT,
-                             icon INTEGER NOT NULL, 
                              name TEXT NOT NULL,
                              description TEXT NOT NULL,
                              date TEXT NOT NULL,
-                             selected INTEGER NOT NULL DEFAULT 0 CHECK(selected IN (0,1)));
+                             icon_url TEXT NOT NULL);
                           """
         )
 
@@ -33,67 +41,72 @@ object LessonDB {
         Log.d(TAG, "Upgrade table lesson")
     }
 
-    fun drop() {
-        database?.execSQL("DROP TABLE IF EXISTS lesson")
-
-        Log.d(TAG, "Drop table lesson")
-    }
-
-    fun add(lesson: Lesson): Long? {
+    private fun addSynchronously(lesson: Lesson) {
         val values = ContentValues()
-        values.put("icon", lesson.icon)
         values.put("name", lesson.name)
         values.put("description", lesson.description)
         values.put("date", lesson.date)
-        values.put("selected", lesson.selected)
+        values.put("icon_url", lesson.iconUrl)
 
         val rowId: Long? = database?.insert("lesson", null, values)
 
         Log.d(TAG, "Inserted new row table: $rowId")
-
-        return rowId
     }
 
-    fun addAll(vararg lessons: Lesson) {
-        lessons.forEach { add(it) }
+    fun add(lesson: Lesson): Completable {
+        return Completable.fromRunnable {
+            addSynchronously(lesson)
+        }
     }
 
-    fun update(lesson: Lesson) {
+    private fun addAllSynchronously(vararg lessons: Lesson) {
+        lessons.forEach(::addSynchronously)
+    }
+
+    fun addAll(vararg lessons: Lesson): Completable {
+        return Completable.fromRunnable {
+            addAllSynchronously(*lessons)
+        }
+    }
+
+    private fun updateSynchronously(lesson: Lesson) {
         val values = ContentValues()
-        values.put("icon", lesson.icon)
         values.put("name", lesson.name)
         values.put("description", lesson.description)
         values.put("date", lesson.date)
-        values.put("selected", lesson.selected)
+        values.put("icon_url", lesson.iconUrl)
 
         database?.update("lesson", values, "id = ?", arrayOf(lesson.id.toString()))
 
         Log.d(TAG, "Updated row table: ${lesson.id}")
     }
 
-    fun updateAll(vararg lessons: Lesson) {
-        lessons.forEach { update(it) }
+    fun update(lesson: Lesson): Completable {
+        return Completable.fromRunnable {
+            updateSynchronously(lesson)
+        }
     }
 
-    fun delete(id: Int) {
+    private fun updateAllSynchronously(vararg lessons: Lesson) {
+        lessons.forEach(::updateSynchronously)
+    }
+
+    fun updateAll(vararg lessons: Lesson): Completable {
+        return Completable.fromRunnable {
+            updateAllSynchronously(*lessons)
+        }
+    }
+
+    private fun deleteSynchronously(id: Long) {
         database?.delete("lesson", "id = ?", arrayOf(id.toString()))
 
         Log.d(TAG, "Deleted row table: $id")
     }
 
-    fun countRows(): Int {
-        var result = 0
-        val cursor = database?.rawQuery("SELECT COUNT(*) FROM lesson", null)
-
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                result = cursor.getInt(0)
-            }
-        } finally {
-            cursor?.close()
+    fun delete(id: Long): Completable {
+        return Completable.fromRunnable {
+            deleteSynchronously(id)
         }
-
-        return result
     }
 
     fun checkIfExists(name: String): Boolean {
@@ -111,19 +124,18 @@ object LessonDB {
         return result
     }
 
-    fun get(id: Int): Lesson {
+    private fun getByIdSynchronously(id: Long): Lesson {
         val arguments = arrayOf(id.toString())
         val cursor = database?.query("lesson", null, "id = ?", arguments, null, null, null)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 return Lesson(
-                    cursor.getInt(cursor.getColumnIndex("id")),
-                    cursor.getInt(cursor.getColumnIndex("icon")),
+                    cursor.getLong(cursor.getColumnIndex("id")),
                     cursor.getString(cursor.getColumnIndex("name")),
                     cursor.getString(cursor.getColumnIndex("description")),
                     cursor.getString(cursor.getColumnIndex("date")),
-                    cursor.getInt(cursor.getColumnIndex("selected")) != 0
+                    cursor.getString(cursor.getColumnIndex("icon_url"))
                 )
             }
         } finally {
@@ -135,7 +147,13 @@ object LessonDB {
         return Lesson()
     }
 
-    fun getAll(): List<Lesson> {
+    fun getById(id: Long): Maybe<Lesson> {
+        return Maybe.fromCallable {
+            getByIdSynchronously(id)
+        }
+    }
+
+    private fun getAllSynchronously(): List<Lesson> {
         val lessons = mutableListOf<Lesson>()
         val cursor: Cursor? = database?.query("lesson", null, null, null, null, null, null)
 
@@ -143,12 +161,11 @@ object LessonDB {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     lessons += Lesson(
-                        cursor.getInt(cursor.getColumnIndex("id")),
-                        cursor.getInt(cursor.getColumnIndex("icon")),
+                        cursor.getLong(cursor.getColumnIndex("id")),
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("description")),
                         cursor.getString(cursor.getColumnIndex("date")),
-                        cursor.getInt(cursor.getColumnIndex("selected")) != 0
+                        cursor.getString(cursor.getColumnIndex("icon_url"))
                     )
                 } while (cursor.moveToNext())
             }
@@ -159,5 +176,9 @@ object LessonDB {
         Log.d(TAG, "Retrieve all rows table")
 
         return lessons
+    }
+
+    fun getAll(): Observable<List<Lesson>> {
+        return Observable.fromCallable(::getAllSynchronously)
     }
 }

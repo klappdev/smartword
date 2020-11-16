@@ -8,10 +8,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="org.kl.smartword.ui.tab.TopicsFragment">
+    tools:context="org.kl.smartword.view.fragment.CategoryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topic_recycle_view"
+        android:id="@+id/category_recycle_view"
         android:paddingTop="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true" />
 
     <TextView
-        android:id="@+id/topic_empty_text_view"
+        android:id="@+id/category_empty_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -29,7 +29,7 @@
         android:layout_alignParentBottom="true"
 
         android:gravity="center"
-        android:text="@string/empty_topics"
+        android:text="@string/empty_categories"
         android:visibility="gone"/>
 
 </RelativeLayout>

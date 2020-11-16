@@ -1,4 +1,4 @@
-package org.kl.smartword.ui.tab
+package org.kl.smartword.view.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -9,37 +9,30 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import java.util.*
+
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.db.LessonDB
+import org.kl.smartword.db.LessonDao
 import org.kl.smartword.event.lesson.ManageLessonListener
-import org.kl.smartword.ui.WordsActivity
-import org.kl.smartword.ui.adapter.DictionaryAdapter
-import org.kl.smartword.util.formatted
+import org.kl.smartword.view.WordsActivity
+import org.kl.smartword.view.adapter.DictionaryAdapter
 
 class DictionaryFragment : Fragment() {
     private lateinit var emptyTextView: TextView
     private lateinit var dictionaryListView: ListView
     private lateinit var dictionaryAdapter: DictionaryAdapter
     private lateinit var fragmentContext: Context
+    private var disposables: CompositeDisposable = CompositeDisposable()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.fragmentContext = context
-
-        if (LessonDB.getAll().size < 5) {
-            LessonDB.addAll(
-                Lesson(1, R.drawable.chemestry_icon, "Chemestry", "", Date().formatted(), false),
-                Lesson(2, R.drawable.geography_icon, "Geography", "", Date().formatted(), false),
-                Lesson(3, R.drawable.history_icon, "History", "", Date().formatted(), false),
-                Lesson(4, R.drawable.math_icon, "Math", "", Date().formatted(), false),
-                Lesson(5, R.drawable.physic_icon, "Physic", "", Date().formatted(), false)
-            )
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,8 +49,17 @@ class DictionaryFragment : Fragment() {
             onItemClickListener = AdapterView.OnItemClickListener(::clickShowWords)
         }
 
-        dictionaryAdapter = DictionaryAdapter(rootView.context, LessonDB.getAll())
-        dictionaryListView.adapter = dictionaryAdapter
+        disposables.add(LessonDao.getAll()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<List<Lesson>>() {
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+                override fun onNext(result: List<Lesson>) {
+                    dictionaryAdapter = DictionaryAdapter(rootView.context, result)
+                    dictionaryListView.adapter = dictionaryAdapter
+                }
+            }))
 
         return rootView
     }
@@ -65,17 +67,28 @@ class DictionaryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        dictionaryAdapter.listLessons = LessonDB.getAll()
-        dictionaryAdapter.notifyDataSetChanged()
+        disposables.add(LessonDao.getAll()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableObserver<List<Lesson>>() {
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+                override fun onNext(result: List<Lesson>) {
+                    dictionaryAdapter.listLessons = result
+                    dictionaryAdapter.notifyDataSetChanged()
+                }
+            }))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 
     private fun clickShowWords(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent(activity, WordsActivity::class.java)
-        intent.putExtra("id_lesson", dictionaryAdapter.getItemId(position).toInt())
+        intent.putExtra("id_lesson", dictionaryAdapter.getItemId(position))
 
         this.startActivity(intent)
-
-        Toast.makeText(parent?.context, "Show words selected lesson ${dictionaryAdapter.getItemId(position).toInt()}", Toast.LENGTH_LONG)
-             .show()
     }
 }

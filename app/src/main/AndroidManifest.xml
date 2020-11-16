@@ -12,27 +12,27 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.EditWordActivity"
+            android:name=".view.EditWordActivity"
             android:label="@string/edit_word_name">
         </activity>
         <activity
-            android:name=".ui.AddWordActivity"
+            android:name=".view.AddWordActivity"
             android:label="@string/add_word_name">
         </activity>
         <activity
-            android:name=".ui.WordsActivity"
+            android:name=".view.WordsActivity"
             android:label="@string/words_name">
         </activity>
         <activity
-            android:name=".ui.EditLessonActivity"
+            android:name=".view.EditLessonActivity"
             android:label="@string/edit_lesson_name">
         </activity>
         <activity
-            android:name=".ui.AddLessonActivity"
+            android:name=".view.AddLessonActivity"
             android:label="@string/add_lesson_name">
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

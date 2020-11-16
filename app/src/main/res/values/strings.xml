@@ -24,7 +24,9 @@
     <string name="add_title">Add</string>
     <string name="edit_title">Update</string>
 
-    <string name="empty_topics">List topics are empty</string>
+    <string name="empty_categories">List category are empty</string>
     <string name="empty_dictionary">List lessons are empty</string>
     <string name="empty_words">List words are empty</string>
+
+    <string name="category_name">Simple category</string>
 </resources>

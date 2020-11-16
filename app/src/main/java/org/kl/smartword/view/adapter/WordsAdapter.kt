@@ -1,4 +1,4 @@
-package org.kl.smartword.ui.adapter
+package org.kl.smartword.view.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -10,12 +10,12 @@ import android.widget.BaseAdapter
 import org.kl.smartword.R
 import org.kl.smartword.model.Word
 import org.kl.smartword.event.word.DeleteWordListener
-import org.kl.smartword.ui.EditWordActivity
-import org.kl.smartword.ui.holder.WordsViewHolder
+import org.kl.smartword.view.EditWordActivity
+import org.kl.smartword.view.holder.WordsViewHolder
 
 class WordsAdapter : BaseAdapter {
-    internal var listWords: List<Word>
     private var context: Context
+    var listWords: List<Word>
 
     constructor(context: Context, list: List<Word>) {
         this.context = context
@@ -36,36 +36,25 @@ class WordsAdapter : BaseAdapter {
             holder = view.tag as WordsViewHolder
         }
 
-        holder.nameTextView?.text = word.name
-        holder.dateTextView?.text = word.date
+        with(holder) {
+            editImageView?.tag = word.id
+            editImageView?.setOnClickListener(::clickEditLesson)
+            deleteImageView?.setOnClickListener(DeleteWordListener(this@WordsAdapter, word))
 
-        holder.editImageView?.tag = word.id
-        holder.editImageView?.setOnClickListener(::clickEditLesson)
-        holder.deleteImageView?.setOnClickListener(DeleteWordListener(this, word))
-
-        if (word.selected) {
-            holder.itemImageView?.setImageResource(R.drawable.word_selected_icon)
-
-            holder.editImageView?.visibility = View.VISIBLE
-            holder.deleteImageView?.visibility = View.VISIBLE
-        } else {
-            holder.itemImageView?.setImageResource(R.drawable.word_icon)
-
-            holder.editImageView?.visibility = View.INVISIBLE
-            holder.deleteImageView?.visibility = View.INVISIBLE
+            bind(word)
         }
 
         return view
     }
 
     override fun getItem(position: Int) = listWords[position]
-    override fun getItemId(position: Int) = listWords[position].id.toLong()
+    override fun getItemId(position: Int) = listWords[position].id
     override fun getCount() = listWords.size
 
     private fun clickEditLesson(view: View?) {
         val intent = Intent(context, EditWordActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("id_word", view?.tag as Int)
+        intent.putExtra("id_word", view?.tag as Long)
 
         context.startActivity(intent)
     }

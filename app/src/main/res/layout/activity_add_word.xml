@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".ui.AddWordActivity">
+    tools:context=".view.AddWordActivity">
 
     <ImageView
         android:id="@+id/item_word_image"

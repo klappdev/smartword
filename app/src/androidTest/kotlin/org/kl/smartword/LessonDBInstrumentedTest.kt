@@ -6,7 +6,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
-import org.kl.smartword.bean.Lesson
+
+import org.kl.smartword.model.Lesson
 import org.kl.smartword.db.LessonDB
 import org.kl.smartword.util.formatted
 import java.util.*
