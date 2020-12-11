@@ -18,7 +18,7 @@ import org.kl.smartword.R
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
 import org.kl.smartword.view.adapter.WordsAdapter
-import org.kl.smartword.event.word.ManageWordListener
+import org.kl.smartword.event.word.ChooseWordListener
 
 class WordsActivity : AppCompatActivity() {
     private lateinit var emptyTextView: TextView
@@ -38,7 +38,7 @@ class WordsActivity : AppCompatActivity() {
         with(wordsListView) {
             choiceMode = ListView.CHOICE_MODE_SINGLE
             emptyView = emptyTextView
-            onItemLongClickListener = ManageWordListener()
+            onItemLongClickListener = ChooseWordListener()
             /*onItemClickListener = AdapterView.OnItemClickListener(::clickShowWord)*/
         }
 

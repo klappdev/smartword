@@ -17,12 +17,12 @@ class ChangeTabListener(private val pageAdapter: SectionPagerAdapter,
         Log.i("TAG-CTE", "current tab selected: $position")
 
         when (TabOrder.findBy(position)) {
-            MAIN_TAB -> {
+            CATEGORY_TAB -> {
                 val fragment = pageAdapter.getItem(position) as CategoryFragment
 
                 /*fragment.updateCategoryContents(context, adapter)*/
             }
-            DICT_TAB -> {
+            DICTIONARY_TAB -> {
                 val fragment = pageAdapter.getItem(position) as DictionaryFragment
 
                 /*fragment.updateDictionaryContents(context, adapter)*/

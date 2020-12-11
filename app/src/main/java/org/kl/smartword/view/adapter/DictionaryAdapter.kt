@@ -1,7 +1,6 @@
 package org.kl.smartword.view.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +8,17 @@ import android.widget.BaseAdapter
 
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.R
-import org.kl.smartword.event.lesson.DeleteLessonListener
-import org.kl.smartword.view.EditLessonActivity
 import org.kl.smartword.view.holder.DictionaryViewHolder
 
 class DictionaryAdapter : BaseAdapter {
-    private var context: Context
-    var listLessons: List<Lesson>
+    var context: Context
+    var listLessons: MutableList<Lesson>
+    var position: Int
 
-    constructor(context: Context, list: List<Lesson>) {
+    constructor(context: Context, list: MutableList<Lesson>) {
         this.context = context
         this.listLessons = list
+        this.position = -1
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -36,25 +35,16 @@ class DictionaryAdapter : BaseAdapter {
             holder = view.tag as DictionaryViewHolder
         }
 
-        with(holder) {
-            editImageView?.tag = lesson.id
-            editImageView?.setOnClickListener(::clickEditLesson)
-            deleteImageView?.setOnClickListener(DeleteLessonListener(this@DictionaryAdapter, lesson))
-
-            bind(lesson)
-        }
+        holder.bind(lesson, getCurrentItemId())
 
         return view
     }
 
+    override fun getCount() = listLessons.size
     override fun getItem(position: Int) = listLessons[position]
     override fun getItemId(position: Int) = listLessons[position].id
-    override fun getCount() = listLessons.size
 
-    private fun clickEditLesson(view: View?) {
-        val intent = Intent(context, EditLessonActivity::class.java)
-        intent.putExtra("id_lesson", view?.tag as Long)
-
-        context.startActivity(intent)
+    fun getCurrentItemId(): Long {
+        return if (position != -1 && position < listLessons.size) getItemId(position) else -1
     }
 }

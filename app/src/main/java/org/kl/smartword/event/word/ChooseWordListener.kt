@@ -6,7 +6,7 @@ import android.widget.AdapterView
 import org.kl.smartword.view.adapter.WordsAdapter
 import org.kl.smartword.view.holder.WordsViewHolder
 
-class ManageWordListener : AdapterView.OnItemLongClickListener {
+class ChooseWordListener : AdapterView.OnItemLongClickListener {
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         val baseAdapter = parent?.adapter as WordsAdapter

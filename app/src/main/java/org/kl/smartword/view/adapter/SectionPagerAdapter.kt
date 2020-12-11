@@ -14,8 +14,15 @@ class SectionPagerAdapter(private val size: Int, manager: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when (TabOrder.findBy(position)) {
-            MAIN_TAB -> CategoryFragment()
-            DICT_TAB -> DictionaryFragment()
+            CATEGORY_TAB -> CategoryFragment()
+            DICTIONARY_TAB -> DictionaryFragment()
+        }
+    }
+
+    fun getItem(tabOrder: TabOrder): Fragment {
+        return when (tabOrder) {
+            CATEGORY_TAB -> CategoryFragment()
+            DICTIONARY_TAB -> DictionaryFragment()
         }
     }
 

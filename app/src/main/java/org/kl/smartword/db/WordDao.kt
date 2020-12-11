@@ -139,7 +139,7 @@ object WordDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Retrieve row table: $id")
+        Log.d(TAG, "Retrieve row table by id: $id")
 
         return Word()
     }
@@ -212,7 +212,7 @@ object WordDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Retrieve all rows table")
+        Log.d(TAG, "Search all rows table by id lesson")
 
         return words
     }

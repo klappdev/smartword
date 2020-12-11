@@ -8,8 +8,8 @@
     <string name="edit_word_name">Update word</string>
     <string name="words_name">List words</string>
 
-    <string name="main_tab">MAIN</string>
-    <string name="dictionary_tab">DICT</string>
+    <string name="category_tab">CATEGORY</string>
+    <string name="dictionary_tab">DICTIONARY</string>
 
     <string name="name_hint">name</string>
     <string name="description_hint">description</string>
@@ -22,7 +22,10 @@
     <string name="irregular_hint">irregular</string>
 
     <string name="add_title">Add</string>
-    <string name="edit_title">Update</string>
+    <string name="sort_title">Sort</string>
+    <string name="delete_title">Delete</string>
+    <string name="edit_title">Edit</string>
+    <string name="search_hint">Search …</string>
 
     <string name="empty_categories">List category are empty</string>
     <string name="empty_dictionary">List lessons are empty</string>

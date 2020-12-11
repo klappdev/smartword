@@ -1,8 +1,8 @@
 package org.kl.smartword.state
 
 enum class TabOrder(val position: Int) {
-    MAIN_TAB(0),
-    DICT_TAB(1);
+    CATEGORY_TAB(0),
+    DICTIONARY_TAB(1);
     /*SETTING_TAB*/
 
     companion object {

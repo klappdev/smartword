@@ -142,7 +142,7 @@ object LessonDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Retrieve all row table: $id")
+        Log.d(TAG, "Retrieve all row table by id: $id")
 
         return Lesson()
     }
@@ -180,5 +180,70 @@ object LessonDao {
 
     fun getAll(): Observable<List<Lesson>> {
         return Observable.fromCallable(::getAllSynchronously)
+    }
+
+    private fun searchByNameSynchronously(name: String): List<Lesson> {
+        val lessons = mutableListOf<Lesson>()
+        val arguments = arrayOf("%${name}%")
+        val cursor = database?.query("lesson", null, "name LIKE ?", arguments, null, null, null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    lessons += Lesson(
+                        cursor.getLong(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("description")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("icon_url"))
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        Log.d(TAG, "Search all rows table by name: $name")
+
+        return lessons
+    }
+
+    fun searchByName(name: String): Observable<List<Lesson>> {
+        return Observable.fromCallable {
+            searchByNameSynchronously(name)
+        }
+    }
+
+    private fun sortByNameSynchronously(asc: Boolean): List<Lesson> {
+        val lessons = mutableListOf<Lesson>()
+        val columns = arrayOf("id", "name", "description", "date", "icon_url")
+        val orderBy = if (asc) "name ASC" else "name DESC"
+        val cursor = database?.query("lesson", columns, null, null, null, null, orderBy)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    lessons += Lesson(
+                        cursor.getLong(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("description")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("icon_url"))
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        Log.d(TAG, "Sort all rows table by $orderBy")
+
+        return lessons
+    }
+
+    fun sortByName(asc: Boolean): Observable<List<Lesson>> {
+        return Observable.fromCallable {
+            sortByNameSynchronously(asc)
+        }
     }
 }
