@@ -24,7 +24,7 @@ class CategoryFragment : Fragment() {
     private lateinit var emptyTextView: TextView
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
-    private var disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater.inflate(R.layout.fragment_category, container, false)

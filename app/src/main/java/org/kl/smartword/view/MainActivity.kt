@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var pagerAdapter: SectionPagerAdapter
     private lateinit var dictionaryFragment: DictionaryFragment
-    var disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         initTabs()
 
         this.dbHelper = DatabaseHelper(applicationContext)
-
         this.addLessonButton = findViewById(R.id.add_lesson_button)
     }
 
@@ -56,35 +55,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val searchMenuItem = menu?.findItem(R.id.action_search)
-        searchMenuItem?.setOnActionExpandListener(SearchLessonListener(dictionaryFragment))
+        val searchMenuItem = menu?.findItem(R.id.action_lesson_search)
+        searchMenuItem?.setOnActionExpandListener(SearchLessonListener(dictionaryFragment, disposables))
 
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-        android.R.id.home -> resetLessonListener()
-        R.id.action_edit -> navigateLessonListener.navigateEditLesson()
-        R.id.action_sort -> sortLessonListener()
-        R.id.action_delete -> deleteLessonListener()
-        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         supportActionBar?.setDisplayHomeAsUpEnabled(menuItemSelected)
         supportActionBar?.setDisplayShowHomeEnabled(menuItemSelected)
 
-        menu?.findItem(R.id.action_search)?.isVisible = !menuItemSelected
-        menu?.findItem(R.id.action_sort)?.isVisible = !menuItemSelected
-        menu?.findItem(R.id.action_edit)?.isVisible = menuItemSelected
-        menu?.findItem(R.id.action_delete)?.isVisible = menuItemSelected
+        menu?.findItem(R.id.action_lesson_search)?.isVisible = !menuItemSelected
+        menu?.findItem(R.id.action_lesson_sort)?.isVisible = !menuItemSelected
+        menu?.findItem(R.id.action_lesson_edit)?.isVisible = menuItemSelected
+        menu?.findItem(R.id.action_lesson_delete)?.isVisible = menuItemSelected
 
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        android.R.id.home -> resetLessonListener()
+        R.id.action_lesson_edit -> navigateLessonListener.navigateEditLesson()
+        R.id.action_lesson_sort -> sortLessonListener()
+        R.id.action_lesson_delete -> deleteLessonListener()
+        else -> super.onOptionsItemSelected(item)
+    }
+
     fun notifyMenuItemSelected(selected: Boolean): Boolean {
         this.menuItemSelected = selected
-        this.invalidateOptionsMenu()
+        invalidateOptionsMenu()
 
         return true
     }
@@ -93,11 +92,11 @@ class MainActivity : AppCompatActivity() {
         this.dictionaryFragment = dictionaryFragment
 
         this.navigateLessonListener = NavigateLessonListener(dictionaryFragment)
-        this.sortLessonListener = SortLessonListener(dictionaryFragment)
-        this.deleteLessonListener = DeleteLessonListener(dictionaryFragment)
+        this.sortLessonListener = SortLessonListener(dictionaryFragment, disposables)
+        this.deleteLessonListener = DeleteLessonListener(dictionaryFragment, disposables)
         this.resetLessonListener = ResetLessonListener(dictionaryFragment)
 
-        this.addLessonButton.setOnClickListener(navigateLessonListener::navigateAddLesson)
+        addLessonButton.setOnClickListener(navigateLessonListener::navigateAddLesson)
     }
 
     private fun initTabs() {
@@ -113,9 +112,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         this.pagerAdapter = SectionPagerAdapter(2, supportFragmentManager)
-
         this.viewPager = findViewById(R.id.page_container)
-        this.tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
+        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
 
         with(viewPager) {
             offscreenPageLimit = 2

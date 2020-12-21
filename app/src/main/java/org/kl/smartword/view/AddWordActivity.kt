@@ -28,8 +28,7 @@ class AddWordActivity : AppCompatActivity() {
         private set
     lateinit var irregularTextView: TextView
         private set
-    var disposables: CompositeDisposable = CompositeDisposable()
-        private set
+    val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

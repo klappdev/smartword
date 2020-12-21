@@ -9,16 +9,9 @@ class ViewValidator {
 
     companion object {
         @JvmStatic
-        fun validate(inputField: TextView, message: String, predicate: (String) -> Boolean) : Boolean {
-            val text: String = inputField.text.toString()
-
-            if (predicate(text)) {
-                inputField.requestFocus()
-                inputField.error = message
-                return false
-            }
-
-            return true
+        fun error(inputField: TextView, message: String) {
+            inputField.requestFocus()
+            inputField.error = message
         }
 
         @JvmStatic

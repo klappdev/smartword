@@ -25,7 +25,7 @@ class DictionaryFragment : Fragment() {
     private lateinit var emptyTextView: TextView
     private lateinit var dictionaryListView: ListView
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
     lateinit var dictionaryAdapter: DictionaryAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

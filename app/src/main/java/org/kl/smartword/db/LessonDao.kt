@@ -7,13 +7,10 @@ import android.util.Log
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.functions.Function
 
 import org.kl.smartword.model.Lesson
-import java.lang.Exception
-import java.util.concurrent.Callable
 
 object LessonDao {
     private const val TAG = "TAG-LDB"
@@ -109,7 +106,7 @@ object LessonDao {
         }
     }
 
-    fun checkIfExists(name: String): Boolean {
+    private fun checkIfExistsSynchronously(name: String): Boolean {
         var result = false
         val cursor = database?.rawQuery("SELECT * FROM lesson WHERE name=?", arrayOf(name.trim()))
 
@@ -122,6 +119,12 @@ object LessonDao {
         }
 
         return result
+    }
+
+    fun checkIfExists(name: String): Single<Boolean> {
+        return Single.fromCallable {
+            checkIfExistsSynchronously(name)
+        }
     }
 
     private fun getByIdSynchronously(id: Long): Lesson {

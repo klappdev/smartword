@@ -6,6 +6,7 @@ import android.util.Log
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.Observable
 
 import org.kl.smartword.model.Word
@@ -101,7 +102,7 @@ object WordDao {
         }
     }
 
-    fun checkIfExists(name: String): Boolean {
+    private fun checkIfExistsSynchronously(name: String): Boolean {
         var result = false
         val cursor = database?.rawQuery("SELECT * FROM word WHERE name=?", arrayOf(name.trim()))
 
@@ -114,6 +115,12 @@ object WordDao {
         }
 
         return result
+    }
+
+    fun checkIfExists(name: String): Single<Boolean> {
+        return Single.fromCallable {
+            checkIfExistsSynchronously(name)
+        }
     }
 
     private fun getByIdSynchronously(id: Long): Word {
@@ -220,6 +227,82 @@ object WordDao {
     fun getAllByIdLesson(idLesson: Long): Observable<List<Word>> {
         return Observable.fromCallable {
             getAllByIdLessonSynchronously(idLesson)
+        }
+    }
+
+    private fun searchByNameSynchronously(name: String): List<Word> {
+        val words = mutableListOf<Word>()
+        val arguments = arrayOf("%${name}%")
+        val cursor = database?.query("word", null, "name LIKE ?", arguments, null, null, null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    words += Word(
+                        cursor.getLong(cursor.getColumnIndex("id")),
+                        cursor.getLong(cursor.getColumnIndex("id_lesson")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("transcription")),
+                        cursor.getString(cursor.getColumnIndex("translation")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("association")),
+                        cursor.getString(cursor.getColumnIndex("etymology")),
+                        cursor.getString(cursor.getColumnIndex("other_form")),
+                        cursor.getString(cursor.getColumnIndex("antonym")),
+                        cursor.getString(cursor.getColumnIndex("irregular"))
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        Log.d(TAG, "Search all rows table by name: $name")
+
+        return words
+    }
+
+    fun searchByName(name: String): Observable<List<Word>> {
+        return Observable.fromCallable {
+            searchByNameSynchronously(name)
+        }
+    }
+
+    private fun sortByNameSynchronously(asc: Boolean): List<Word> {
+        val words = mutableListOf<Word>()
+        val orderBy = if (asc) "name ASC" else "name DESC"
+        val cursor = database?.query("word", null, null, null, null, null, orderBy)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    words += Word(
+                        cursor.getLong(cursor.getColumnIndex("id")),
+                        cursor.getLong(cursor.getColumnIndex("id_lesson")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("transcription")),
+                        cursor.getString(cursor.getColumnIndex("translation")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("association")),
+                        cursor.getString(cursor.getColumnIndex("etymology")),
+                        cursor.getString(cursor.getColumnIndex("other_form")),
+                        cursor.getString(cursor.getColumnIndex("antonym")),
+                        cursor.getString(cursor.getColumnIndex("irregular"))
+                    )
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        Log.d(TAG, "Sort all rows table by $orderBy")
+
+        return words
+    }
+
+    fun sortByName(asc: Boolean): Observable<List<Word>> {
+        return Observable.fromCallable {
+            sortByNameSynchronously(asc)
         }
     }
 }

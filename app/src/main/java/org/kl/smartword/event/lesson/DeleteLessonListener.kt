@@ -21,11 +21,10 @@ class DeleteLessonListener {
     private val disposables: CompositeDisposable
     private val dictionaryAdapter: DictionaryAdapter
 
-    constructor(dictionaryFragment: DictionaryFragment) {
+    constructor(dictionaryFragment: DictionaryFragment, disposables: CompositeDisposable) {
         this.activity = dictionaryFragment.activity as MainActivity
-        this.disposables = activity.disposables
-
         this.dictionaryAdapter = dictionaryFragment.dictionaryAdapter
+        this.disposables = disposables
     }
 
     operator fun invoke(): Boolean {
@@ -42,7 +41,7 @@ class DeleteLessonListener {
     }
 
     private fun clickPositiveButton(dialog: DialogInterface, id: Int) {
-        val lesson = dictionaryAdapter.getItem(dictionaryAdapter.position)
+        val lesson = dictionaryAdapter.getCurrentItem()
 
         disposables.add(LessonDao.delete(lesson.id)
             .subscribeOn(Schedulers.io())

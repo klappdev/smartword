@@ -17,11 +17,10 @@ class SortLessonListener {
     private val dictionaryAdapter: DictionaryAdapter
     private var isAsc: Boolean = false
 
-    constructor(dictionaryFragment: DictionaryFragment) {
+    constructor(dictionaryFragment: DictionaryFragment, disposables: CompositeDisposable) {
         this.activity = dictionaryFragment.activity as MainActivity
-        this.disposables = activity.disposables
-
         this.dictionaryAdapter = dictionaryFragment.dictionaryAdapter
+        this.disposables = disposables
     }
 
     operator fun invoke(): Boolean {

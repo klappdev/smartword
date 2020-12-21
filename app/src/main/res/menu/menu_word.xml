@@ -4,27 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_lesson_search"
+        android:id="@+id/action_word_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@android:string/search_go"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
-        android:id="@+id/action_lesson_sort"
+        android:id="@+id/action_word_sort"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:title="@string/sort_title"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_lesson_delete"
+        android:id="@+id/action_word_delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/delete_title"
         android:visible="false"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/action_lesson_edit"
+        android:id="@+id/action_word_edit"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_title"
         android:visible="false"

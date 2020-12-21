@@ -44,7 +44,6 @@ class DictionaryAdapter : BaseAdapter {
     override fun getItem(position: Int) = listLessons[position]
     override fun getItemId(position: Int) = listLessons[position].id
 
-    fun getCurrentItemId(): Long {
-        return if (position != -1 && position < listLessons.size) getItemId(position) else -1
-    }
+    fun getCurrentItem() = getItem(position)
+    fun getCurrentItemId() = if (position != -1 && position < count) getItemId(position) else -1
 }

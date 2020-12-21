@@ -11,12 +11,10 @@ class ChooseLessonListener(
 
     override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
         val baseAdapter = parent?.adapter as DictionaryAdapter
-
         baseAdapter.position = position
         baseAdapter.notifyDataSetChanged()
 
         notifyAction?.invoke(true)
-
         return true
     }
 }

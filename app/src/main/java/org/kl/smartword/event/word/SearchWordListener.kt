@@ -1,4 +1,4 @@
-package org.kl.smartword.event.lesson
+package org.kl.smartword.event.word
 
 import android.view.MenuItem
 import android.view.View
@@ -12,46 +12,45 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
-import org.kl.smartword.db.LessonDao
-import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.MainActivity
-import org.kl.smartword.view.adapter.DictionaryAdapter
-import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.db.WordDao
+import org.kl.smartword.model.Word
+import org.kl.smartword.view.WordsActivity
+import org.kl.smartword.view.adapter.WordsAdapter
 
-class SearchLessonListener : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
-    private val activity: MainActivity
+class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
+    private val activity: WordsActivity
     private val disposables: CompositeDisposable
-    private val dictionaryAdapter: DictionaryAdapter
+    private val wordsAdapter: WordsAdapter
 
     private var searchView: SearchView? = null
     private var searchInput: TextView? = null
     private var closeIcon: ImageView? = null
     private var currentSize: Int = -1
 
-    constructor(dictionaryFragment: DictionaryFragment, disposables: CompositeDisposable) {
-        this.activity = dictionaryFragment.activity as MainActivity
-        this.dictionaryAdapter = dictionaryFragment.dictionaryAdapter
+    constructor(activity: WordsActivity, wordsAdapter: WordsAdapter, disposables: CompositeDisposable) {
+        this.activity = activity
+        this.wordsAdapter = wordsAdapter
         this.disposables = disposables
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         if (!newText.isNullOrEmpty()) {
-            disposables.add(LessonDao.searchByName(newText)
+            disposables.add(WordDao.searchByName(newText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<List<Lesson>>() {
+                .subscribeWith(object: DisposableObserver<List<Word>>() {
                     override fun onComplete() {}
                     override fun onError(e: Throwable) {}
-                    override fun onNext(result: List<Lesson>) {
-                        dictionaryAdapter.listLessons.clear()
-                        dictionaryAdapter.listLessons.addAll(result)
-                        dictionaryAdapter.notifyDataSetChanged()
+                    override fun onNext(result: List<Word>) {
+                        wordsAdapter.listWords.clear()
+                        wordsAdapter.listWords.addAll(result)
+                        wordsAdapter.notifyDataSetChanged()
 
                         currentSize = result.size
                     }
                 }))
         } else {
-            refreshLessons()
+            refreshWords()
         }
 
         return true
@@ -74,30 +73,30 @@ class SearchLessonListener : View.OnClickListener, MenuItem.OnActionExpandListen
     }
 
     override fun onMenuItemActionCollapse(view: MenuItem?): Boolean {
-        dictionaryAdapter.position = -1
+        wordsAdapter.position = -1
         activity.notifyMenuItemSelected(false)
-        refreshLessons()
+        refreshWords()
 
         return true
     }
 
     override fun onClick(view: View?) {
-        refreshLessons()
+        refreshWords()
         this.searchInput?.text = ""
     }
 
-    private fun refreshLessons() {
-        disposables.add(LessonDao.getAll()
+    private fun refreshWords() {
+        disposables.add(WordDao.getAll()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<List<Lesson>>() {
+            .subscribeWith(object: DisposableObserver<List<Word>>() {
                 override fun onComplete() {}
                 override fun onError(e: Throwable) {}
-                override fun onNext(result: List<Lesson>) {
+                override fun onNext(result: List<Word>) {
                     if (currentSize != -1 && currentSize != result.size) {
-                        dictionaryAdapter.listLessons.clear()
-                        dictionaryAdapter.listLessons.addAll(result)
-                        dictionaryAdapter.notifyDataSetChanged()
+                        wordsAdapter.listWords.clear()
+                        wordsAdapter.listWords.addAll(result)
+                        wordsAdapter.notifyDataSetChanged()
                         currentSize = -1
                     }
                 }

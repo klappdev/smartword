@@ -29,19 +29,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize">
-
-            <!--
-            <io.codetail.widget.RevealFrameLayout
-                android:id="@+id/reveal_layout"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <include layout="@layout/filter_base" />
-
-            </io.codetail.widget.RevealFrameLayout>
-            -->
+            android:layout_marginTop="?attr/actionBarSize"
+            tools:ignore="UselessLeaf">
         </FrameLayout>
 
         <com.google.android.material.tabs.TabLayout
