@@ -1,7 +1,7 @@
 package org.kl.smartword.model
 
+import java.util.Date
 import org.kl.smartword.util.formatted
-import java.util.*
 
 data class Word(val id: Long,
                 val idLesson: Long,

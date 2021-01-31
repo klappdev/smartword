@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import org.kl.smartword.view.AddLessonActivity
 import org.kl.smartword.view.EditLessonActivity
-import org.kl.smartword.view.WordsActivity
+import org.kl.smartword.view.ShowLessonActivity
 import org.kl.smartword.view.adapter.DictionaryAdapter
 import org.kl.smartword.view.fragment.DictionaryFragment
 
@@ -34,8 +34,8 @@ class NavigateLessonListener {
         return true
     }
 
-    fun navigateShowWords(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(context, WordsActivity::class.java)
+    fun navigateShowLesson(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val intent = Intent(context, ShowLessonActivity::class.java)
         intent.putExtra("id_lesson", dictionaryAdapter.getItemId(position))
 
         context.startActivity(intent)

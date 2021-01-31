@@ -12,18 +12,18 @@ import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Word
 import org.kl.smartword.db.WordDao
-import org.kl.smartword.view.adapter.WordsAdapter
+import org.kl.smartword.view.adapter.LessonAdapter
 import org.kl.smartword.util.toast
 
 class DeleteWordListener {
-    private val wordsAdapter: WordsAdapter
+    private val lessonAdapter: LessonAdapter
     private val disposables: CompositeDisposable
     private val context: Context
 
-    constructor(wordsAdapter: WordsAdapter, disposables: CompositeDisposable) {
-        this.wordsAdapter = wordsAdapter
+    constructor(lessonAdapter: LessonAdapter, disposables: CompositeDisposable) {
+        this.lessonAdapter = lessonAdapter
         this.disposables = disposables
-        this.context = wordsAdapter.context
+        this.context = lessonAdapter.context
     }
 
     operator fun invoke(): Boolean {
@@ -40,7 +40,7 @@ class DeleteWordListener {
     }
 
     private fun clickPositiveButton(dialog: DialogInterface, id: Int) {
-        val word = wordsAdapter.getCurrentItem()
+        val word = lessonAdapter.getCurrentItem()
 
         disposables.add(WordDao.delete(word.id)
             .subscribeOn(Schedulers.io())
@@ -68,10 +68,10 @@ class DeleteWordListener {
                 override fun onComplete() {}
                 override fun onError(e: Throwable) {}
                 override fun onNext(result: List<Word>) {
-                    wordsAdapter.position = -1
-                    wordsAdapter.listWords.clear()
-                    wordsAdapter.listWords.addAll(result)
-                    wordsAdapter.notifyDataSetChanged()
+                    lessonAdapter.position = -1
+                    lessonAdapter.listWords.clear()
+                    lessonAdapter.listWords.addAll(result)
+                    lessonAdapter.notifyDataSetChanged()
                 }
             }))
     }

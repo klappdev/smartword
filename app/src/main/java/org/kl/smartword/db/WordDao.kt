@@ -22,12 +22,12 @@ object WordDao {
                              name TEXT NOT NULL,
                              transcription TEXT NOT NULL,
                              translation TEXT NOT NULL,							 
-							 date TEXT NOT NULL,
 							 association TEXT NOT NULL,
 							 etymology TEXT NOT NULL,
 							 other_form TEXT NOT NULL,
 							 antonym TEXT NOT NULL,
-							 irregular TEXT NOT NULL);
+							 irregular TEXT NOT NULL,
+                             date TEXT NOT NULL);
                           """)
 
         Log.d(TAG, "Create table word")
@@ -48,12 +48,12 @@ object WordDao {
         values.put("name", word.name)
         values.put("transcription", word.transcription)
         values.put("translation", word.translation)
-        values.put("date", word.date)
         values.put("association", word.association)
         values.put("etymology", word.etymology)
         values.put("other_form", word.otherForm)
         values.put("antonym", word.antonym)
         values.put("irregular", word.irregular)
+        values.put("date", word.date)
 
         val rowId = database?.insert("word", null, values)
 
@@ -72,12 +72,12 @@ object WordDao {
         values.put("name", word.name)
         values.put("transcription", word.transcription)
         values.put("translation", word.translation)
-        values.put("date", word.date)
         values.put("association", word.association)
         values.put("etymology", word.etymology)
         values.put("other_form", word.otherForm)
         values.put("antonym", word.antonym)
         values.put("irregular", word.irregular)
+        values.put("date", word.date)
 
         database?.update("word", values, "id = ?", arrayOf(word.id.toString()))
 
@@ -134,12 +134,12 @@ object WordDao {
                             cursor.getString(cursor.getColumnIndex("name")),
                             cursor.getString(cursor.getColumnIndex("transcription")),
                             cursor.getString(cursor.getColumnIndex("translation")),
-                            cursor.getString(cursor.getColumnIndex("date")),
                             cursor.getString(cursor.getColumnIndex("association")),
                             cursor.getString(cursor.getColumnIndex("etymology")),
                             cursor.getString(cursor.getColumnIndex("other_form")),
                             cursor.getString(cursor.getColumnIndex("antonym")),
-                            cursor.getString(cursor.getColumnIndex("irregular"))
+                            cursor.getString(cursor.getColumnIndex("irregular")),
+                            cursor.getString(cursor.getColumnIndex("date"))
                 )
             }
         } finally {
@@ -170,12 +170,12 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("transcription")),
                         cursor.getString(cursor.getColumnIndex("translation")),
-                        cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
                         cursor.getString(cursor.getColumnIndex("other_form")),
                         cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular"))
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
             }
@@ -206,12 +206,12 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("transcription")),
                         cursor.getString(cursor.getColumnIndex("translation")),
-                        cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
                         cursor.getString(cursor.getColumnIndex("other_form")),
                         cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular"))
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
             }
@@ -244,12 +244,12 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("transcription")),
                         cursor.getString(cursor.getColumnIndex("translation")),
-                        cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
                         cursor.getString(cursor.getColumnIndex("other_form")),
                         cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular"))
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
             }
@@ -282,12 +282,12 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("transcription")),
                         cursor.getString(cursor.getColumnIndex("translation")),
-                        cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
                         cursor.getString(cursor.getColumnIndex("other_form")),
                         cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular"))
+                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
             }

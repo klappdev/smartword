@@ -7,10 +7,10 @@ import android.widget.TextView
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
 
-class DictionaryViewHolder {
-    private var nameTextView: TextView
-    private var dateTextView: TextView
-    private var itemImageView: ImageView
+class LessonViewHolder {
+    private val nameTextView: TextView
+    private val dateTextView: TextView
+    private val itemImageView: ImageView
 
     constructor(view: View) {
         this.nameTextView = view.findViewById(R.id.name_lesson_text_view)

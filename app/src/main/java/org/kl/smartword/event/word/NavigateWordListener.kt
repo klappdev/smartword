@@ -5,19 +5,19 @@ import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 
-import org.kl.smartword.util.toast
 import org.kl.smartword.view.AddWordActivity
 import org.kl.smartword.view.EditWordActivity
-import org.kl.smartword.view.adapter.WordsAdapter
+import org.kl.smartword.view.ShowWordActivity
+import org.kl.smartword.view.adapter.LessonAdapter
 
 class NavigateWordListener {
-    private val wordsAdapter: WordsAdapter
+    private val lessonAdapter: LessonAdapter
     private val context: Context
     private val idLesson: Long
 
-    constructor(wordsAdapter: WordsAdapter, idLesson: Long) {
-        this.wordsAdapter = wordsAdapter
-        this.context = wordsAdapter.context
+    constructor(lessonAdapter: LessonAdapter, idLesson: Long) {
+        this.lessonAdapter = lessonAdapter
+        this.context = lessonAdapter.context
         this.idLesson = idLesson
     }
 
@@ -30,7 +30,7 @@ class NavigateWordListener {
     }
 
     fun navigateEditWord(): Boolean {
-        val idWord: Long = wordsAdapter.getCurrentItemId()
+        val idWord: Long = lessonAdapter.getCurrentItemId()
 
         val intent = Intent(context, EditWordActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -41,6 +41,9 @@ class NavigateWordListener {
     }
 
     fun navigateShowWord(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        context.toast("Show word content")
+        val intent = Intent(context, ShowWordActivity::class.java)
+        intent.putExtra("id_word", lessonAdapter.getItemId(position))
+
+        context.startActivity(intent)
     }
 }

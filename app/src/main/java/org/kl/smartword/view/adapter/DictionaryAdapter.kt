@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.R
-import org.kl.smartword.view.holder.DictionaryViewHolder
+import org.kl.smartword.view.holder.LessonViewHolder
 
 class DictionaryAdapter : BaseAdapter {
     var context: Context
@@ -24,15 +24,15 @@ class DictionaryAdapter : BaseAdapter {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
         val lesson = getItem(position)
-        val holder: DictionaryViewHolder
+        val holder: LessonViewHolder
 
         if (view == null) {
             view = LayoutInflater.from(context)
                                  .inflate(R.layout.lesson_item, parent, false)
-            holder = DictionaryViewHolder(view)
+            holder = LessonViewHolder(view)
             view.tag = holder
         } else {
-            holder = view.tag as DictionaryViewHolder
+            holder = view.tag as LessonViewHolder
         }
 
         holder.bind(lesson, getCurrentItemId())

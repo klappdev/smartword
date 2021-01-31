@@ -34,6 +34,15 @@ class AddWordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_word)
 
+        initView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
+
+    private fun initView() {
         this.nameTextView = findViewById(R.id.name_word_text_view)
         this.transcriptionTextView = findViewById(R.id.transcription_word_text_view)
         this.translationTextView = findViewById(R.id.translation_word_text_view)
@@ -46,10 +55,5 @@ class AddWordActivity : AppCompatActivity() {
 
         val idLesson = intent.getLongExtra("id_lesson", -1)
         addButton.setOnClickListener(AddWordListener(this, idLesson))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
     }
 }

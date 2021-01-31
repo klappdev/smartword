@@ -8,9 +8,9 @@ import android.widget.BaseAdapter
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.holder.WordsViewHolder
+import org.kl.smartword.view.holder.WordViewHolder
 
-class WordsAdapter : BaseAdapter {
+class LessonAdapter : BaseAdapter {
     var context: Context
     var listWords: MutableList<Word>
     var position: Int
@@ -24,15 +24,15 @@ class WordsAdapter : BaseAdapter {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
         val word = getItem(position)
-        val holder: WordsViewHolder
+        val holder: WordViewHolder
 
         if (view == null) {
             view = LayoutInflater.from(context)
                                  .inflate(R.layout.word_item, parent, false)
-            holder = WordsViewHolder(view)
+            holder = WordViewHolder(view)
             view.tag = holder
         } else {
-            holder = view.tag as WordsViewHolder
+            holder = view.tag as WordViewHolder
         }
 
         holder.bind(word, getCurrentItemId())

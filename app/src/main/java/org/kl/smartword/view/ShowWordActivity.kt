@@ -1,9 +1,9 @@
 package org.kl.smartword.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -13,31 +13,25 @@ import io.reactivex.schedulers.Schedulers
 import org.kl.smartword.R
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
-import org.kl.smartword.event.word.EditWordListener
 
-class EditWordActivity : AppCompatActivity() {
-    private lateinit var editButton: Button
-    lateinit var nameTextView: TextView
-        private set
-    lateinit var transcriptionTextView: TextView
-        private set
-    lateinit var translationTextView: TextView
-        private set
-    lateinit var associationTextView: TextView
-        private set
-    lateinit var etymologyTextView: TextView
-        private set
-    lateinit var otherFormTextView: TextView
-        private set
-    lateinit var antonymTextView: TextView
-        private set
-    lateinit var irregularTextView: TextView
-        private set
-    val disposables = CompositeDisposable()
+class ShowWordActivity : AppCompatActivity() {
+    private lateinit var nameWordTextView: TextView
+    private lateinit var dateWordTextView: TextView
+    private lateinit var transcriptionTextView: TextView
+    private lateinit var translationTextView: TextView
+    private lateinit var associationTextView: TextView
+    private lateinit var etymologyTextView: TextView
+    private lateinit var otherFormTextView: TextView
+    private lateinit var antonymTextView: TextView
+    private lateinit var irregularTextView: TextView
+    private lateinit var nextWordButton: MaterialButton
+
+    private val disposables = CompositeDisposable()
+    private var idWord: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_word)
+        setContentView(R.layout.activity_show_word)
 
         initView()
         initWord()
@@ -49,7 +43,8 @@ class EditWordActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.nameTextView = findViewById(R.id.name_word_text_view)
+        this.nameWordTextView = findViewById(R.id.name_word_text_view)
+        this.dateWordTextView = findViewById(R.id.date_word_text_view)
         this.transcriptionTextView = findViewById(R.id.transcription_word_text_view)
         this.translationTextView = findViewById(R.id.translation_word_text_view)
         this.associationTextView = findViewById(R.id.association_word_text_view)
@@ -57,20 +52,21 @@ class EditWordActivity : AppCompatActivity() {
         this.otherFormTextView = findViewById(R.id.other_form_word_text_view)
         this.antonymTextView = findViewById(R.id.antonym_word_text_view)
         this.irregularTextView = findViewById(R.id.irregular_word_text_view)
-        this.editButton = findViewById(R.id.edit_word_button)
+        this.nextWordButton = findViewById(R.id.next_word_button)
+
+        idWord = intent.getLongExtra("id_word", -1)
     }
 
     private fun initWord() {
-        val idWord = intent.getLongExtra("id_word", -1)
-
         disposables.add(WordDao.getById(idWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableMaybeObserver<Word>() {
                 override fun onComplete() {}
-                override fun onError(e: Throwable) {}
+                override fun onError(error: Throwable) {}
                 override fun onSuccess(result: Word) {
-                    nameTextView.text = result.name
+                    nameWordTextView.text = result.name
+                    dateWordTextView.text = result.date
                     transcriptionTextView.text = result.transcription
                     translationTextView.text = result.translation
                     associationTextView.text = result.association
@@ -78,9 +74,6 @@ class EditWordActivity : AppCompatActivity() {
                     otherFormTextView.text = result.otherForm
                     antonymTextView.text = result.antonym
                     irregularTextView.text = result.irregular
-
-                    val listener = EditWordListener(this@EditWordActivity, result.id, result.idLesson)
-                    editButton.setOnClickListener(listener)
                 }
             }))
     }

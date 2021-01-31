@@ -28,6 +28,10 @@ class AddWordListener(private val activity: AddWordActivity,
             return
         }
 
+        addWordIfNotExist()
+    }
+
+    private fun addWordIfNotExist() {
         val name = activity.nameTextView.text.toString()
 
         disposables.add(WordDao.checkIfExists(name)
@@ -40,13 +44,13 @@ class AddWordListener(private val activity: AddWordActivity,
                         ViewValidator.error(activity.nameTextView, "Lesson already exists")
                     } else {
                         addWord(Word(-1, idLesson, name,
-                                    transcription = activity.transcriptionTextView.text.toString(),
-                                    translation = activity.translationTextView.text.toString(),
-                                    association = activity.associationTextView.text.toString(),
-                                    etymology = activity.etymologyTextView.text.toString(),
-                                    otherForm = activity.otherFormTextView.text.toString(),
-                                    antonym = activity.antonymTextView.text.toString(),
-                                    irregular = activity.irregularTextView.text.toString()))
+                            transcription = activity.transcriptionTextView.text.toString(),
+                            translation = activity.translationTextView.text.toString(),
+                            association = activity.associationTextView.text.toString(),
+                            etymology = activity.etymologyTextView.text.toString(),
+                            otherForm = activity.otherFormTextView.text.toString(),
+                            antonym = activity.antonymTextView.text.toString(),
+                            irregular = activity.irregularTextView.text.toString()))
                     }
                 }
             }))

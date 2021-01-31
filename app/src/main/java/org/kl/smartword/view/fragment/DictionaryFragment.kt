@@ -44,7 +44,7 @@ class DictionaryFragment : Fragment() {
             choiceMode = ListView.CHOICE_MODE_SINGLE
             emptyView = emptyTextView
             onItemLongClickListener = ChooseLessonListener(mainActivity::notifyMenuItemSelected)
-            onItemClickListener = AdapterView.OnItemClickListener(mainActivity.navigateLessonListener::navigateShowWords)
+            onItemClickListener = AdapterView.OnItemClickListener(mainActivity.navigateLessonListener::navigateShowLesson)
             adapter = dictionaryAdapter
         }
 

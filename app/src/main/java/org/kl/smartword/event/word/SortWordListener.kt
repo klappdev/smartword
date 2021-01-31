@@ -7,15 +7,15 @@ import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.adapter.WordsAdapter
+import org.kl.smartword.view.adapter.LessonAdapter
 
 class SortWordListener {
-    private val wordsAdapter: WordsAdapter
+    private val lessonAdapter: LessonAdapter
     private val disposables: CompositeDisposable
     private var isAsc: Boolean
 
-    constructor(wordsAdapter: WordsAdapter, disposables: CompositeDisposable) {
-        this.wordsAdapter = wordsAdapter
+    constructor(lessonAdapter: LessonAdapter, disposables: CompositeDisposable) {
+        this.lessonAdapter = lessonAdapter
         this.disposables = disposables
         this.isAsc = false
     }
@@ -28,9 +28,9 @@ class SortWordListener {
                 override fun onComplete() { }
                 override fun onError(e: Throwable) {}
                 override fun onNext(result: List<Word>) {
-                    wordsAdapter.listWords.clear()
-                    wordsAdapter.listWords.addAll(result)
-                    wordsAdapter.notifyDataSetChanged()
+                    lessonAdapter.listWords.clear()
+                    lessonAdapter.listWords.addAll(result)
+                    lessonAdapter.notifyDataSetChanged()
 
                     isAsc = !isAsc
                 }

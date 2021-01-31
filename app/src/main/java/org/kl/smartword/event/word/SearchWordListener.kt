@@ -14,22 +14,22 @@ import io.reactivex.schedulers.Schedulers
 import org.kl.smartword.R
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.WordsActivity
-import org.kl.smartword.view.adapter.WordsAdapter
+import org.kl.smartword.view.ShowLessonActivity
+import org.kl.smartword.view.adapter.LessonAdapter
 
 class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
-    private val activity: WordsActivity
+    private val activity: ShowLessonActivity
     private val disposables: CompositeDisposable
-    private val wordsAdapter: WordsAdapter
+    private val lessonAdapter: LessonAdapter
 
     private var searchView: SearchView? = null
     private var searchInput: TextView? = null
     private var closeIcon: ImageView? = null
     private var currentSize: Int = -1
 
-    constructor(activity: WordsActivity, wordsAdapter: WordsAdapter, disposables: CompositeDisposable) {
+    constructor(activity: ShowLessonActivity, lessonAdapter: LessonAdapter, disposables: CompositeDisposable) {
         this.activity = activity
-        this.wordsAdapter = wordsAdapter
+        this.lessonAdapter = lessonAdapter
         this.disposables = disposables
     }
 
@@ -42,9 +42,9 @@ class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener
                     override fun onComplete() {}
                     override fun onError(e: Throwable) {}
                     override fun onNext(result: List<Word>) {
-                        wordsAdapter.listWords.clear()
-                        wordsAdapter.listWords.addAll(result)
-                        wordsAdapter.notifyDataSetChanged()
+                        lessonAdapter.listWords.clear()
+                        lessonAdapter.listWords.addAll(result)
+                        lessonAdapter.notifyDataSetChanged()
 
                         currentSize = result.size
                     }
@@ -73,7 +73,7 @@ class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener
     }
 
     override fun onMenuItemActionCollapse(view: MenuItem?): Boolean {
-        wordsAdapter.position = -1
+        lessonAdapter.position = -1
         activity.notifyMenuItemSelected(false)
         refreshWords()
 
@@ -94,9 +94,9 @@ class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener
                 override fun onError(e: Throwable) {}
                 override fun onNext(result: List<Word>) {
                     if (currentSize != -1 && currentSize != result.size) {
-                        wordsAdapter.listWords.clear()
-                        wordsAdapter.listWords.addAll(result)
-                        wordsAdapter.notifyDataSetChanged()
+                        lessonAdapter.listWords.clear()
+                        lessonAdapter.listWords.addAll(result)
+                        lessonAdapter.notifyDataSetChanged()
                         currentSize = -1
                     }
                 }

@@ -12,6 +12,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".view.ShowWordActivity"
+            android:label="@string/show_word_name">
+        </activity>
+        <activity
             android:name=".view.EditWordActivity"
             android:label="@string/edit_word_name">
         </activity>
@@ -20,8 +24,8 @@
             android:label="@string/add_word_name">
         </activity>
         <activity
-            android:name=".view.WordsActivity"
-            android:label="@string/words_name">
+            android:name=".view.ShowLessonActivity"
+            android:label="@string/show_lesson_name">
         </activity>
         <activity
             android:name=".view.EditLessonActivity"

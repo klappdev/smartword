@@ -29,15 +29,19 @@ class EditWordListener(private val activity: EditWordActivity,
         }
 
         val newWord = Word(idWord, idLesson,
-                           name = activity.nameTextView.text.toString(),
-                           transcription = activity.transcriptionTextView.text.toString(),
-                           translation = activity.translationTextView.text.toString(),
-                           association = activity.associationTextView.text.toString(),
-                           etymology = activity.etymologyTextView.text.toString(),
-                           otherForm = activity.otherFormTextView.text.toString(),
-                           antonym = activity.antonymTextView.text.toString(),
-                           irregular = activity.irregularTextView.text.toString())
+            name = activity.nameTextView.text.toString(),
+            transcription = activity.transcriptionTextView.text.toString(),
+            translation = activity.translationTextView.text.toString(),
+            association = activity.associationTextView.text.toString(),
+            etymology = activity.etymologyTextView.text.toString(),
+            otherForm = activity.otherFormTextView.text.toString(),
+            antonym = activity.antonymTextView.text.toString(),
+            irregular = activity.irregularTextView.text.toString())
 
+        updateWord(newWord)
+    }
+
+    private fun updateWord(newWord: Word) {
         disposables.add(WordDao.update(newWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

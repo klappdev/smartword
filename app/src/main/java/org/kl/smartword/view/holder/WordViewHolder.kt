@@ -7,7 +7,7 @@ import android.widget.TextView
 import org.kl.smartword.R
 import org.kl.smartword.model.Word
 
-class WordsViewHolder {
+class WordViewHolder {
     private val nameTextView: TextView
     private val dateTextView: TextView
     private val itemImageView: ImageView

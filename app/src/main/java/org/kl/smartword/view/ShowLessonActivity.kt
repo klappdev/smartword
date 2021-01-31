@@ -19,12 +19,12 @@ import org.kl.smartword.R
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.word.*
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.adapter.WordsAdapter
+import org.kl.smartword.view.adapter.LessonAdapter
 
-class WordsActivity : AppCompatActivity() {
+class ShowLessonActivity : AppCompatActivity() {
     private lateinit var emptyTextView: TextView
     private lateinit var wordsListView: ListView
-    private lateinit var wordsAdapter: WordsAdapter
+    private lateinit var lessonAdapter: LessonAdapter
     private val disposables = CompositeDisposable()
 
     private lateinit var addWordButton: FloatingActionButton
@@ -58,7 +58,7 @@ class WordsActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_word, menu)
 
         val searchMenuItem = menu?.findItem(R.id.action_word_search)
-        searchMenuItem?.setOnActionExpandListener(SearchWordListener(this, wordsAdapter, disposables))
+        searchMenuItem?.setOnActionExpandListener(SearchWordListener(this, lessonAdapter, disposables))
 
         return true
     }
@@ -91,9 +91,9 @@ class WordsActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        this.resetWordListener = ResetWordListener(this, wordsAdapter)
-        this.sortWordListener = SortWordListener(wordsAdapter, disposables)
-        this.deleteWordListener = DeleteWordListener(wordsAdapter, disposables)
+        this.resetWordListener = ResetWordListener(this, lessonAdapter)
+        this.sortWordListener = SortWordListener(lessonAdapter, disposables)
+        this.deleteWordListener = DeleteWordListener(lessonAdapter, disposables)
 
         addWordButton.setOnClickListener(navigateWordListener::navigateAddWord)
     }
@@ -105,13 +105,13 @@ class WordsActivity : AppCompatActivity() {
 
         idLesson = intent.getLongExtra("id_lesson", -1)
 
-        this.wordsAdapter = WordsAdapter(this, mutableListOf())
-        this.navigateWordListener = NavigateWordListener(wordsAdapter, idLesson)
+        this.lessonAdapter = LessonAdapter(this, mutableListOf())
+        this.navigateWordListener = NavigateWordListener(lessonAdapter, idLesson)
 
         with(wordsListView) {
             choiceMode = ListView.CHOICE_MODE_SINGLE
             emptyView = emptyTextView
-            adapter = wordsAdapter
+            adapter = lessonAdapter
             onItemLongClickListener = ChooseWordListener(::notifyMenuItemSelected)
             onItemClickListener = AdapterView.OnItemClickListener(navigateWordListener::navigateShowWord)
         }
@@ -125,10 +125,10 @@ class WordsActivity : AppCompatActivity() {
                 override fun onComplete() {}
                 override fun onError(e: Throwable) {}
                 override fun onNext(result: List<Word>) {
-                    wordsAdapter.position = -1
-                    wordsAdapter.listWords.clear()
-                    wordsAdapter.listWords.addAll(result)
-                    wordsAdapter.notifyDataSetChanged()
+                    lessonAdapter.position = -1
+                    lessonAdapter.listWords.clear()
+                    lessonAdapter.listWords.addAll(result)
+                    lessonAdapter.notifyDataSetChanged()
                 }
             }))
     }
