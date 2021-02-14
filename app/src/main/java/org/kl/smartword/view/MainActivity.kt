@@ -1,5 +1,6 @@
 package org.kl.smartword.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,10 +15,11 @@ import io.reactivex.disposables.CompositeDisposable
 
 import org.kl.smartword.R
 import org.kl.smartword.db.DatabaseHelper
-import org.kl.smartword.event.lesson.*
-import org.kl.smartword.event.tab.ChangeTabListener
 import org.kl.smartword.view.adapter.SectionPagerAdapter
 import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.event.tab.ChangeTabListener
+import org.kl.smartword.event.lesson.*
+import org.kl.smartword.work.LoadInitDBService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
@@ -44,6 +46,25 @@ class MainActivity : AppCompatActivity() {
 
         this.dbHelper = DatabaseHelper(applicationContext)
         this.addLessonButton = findViewById(R.id.add_lesson_button)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val serviceIntent = Intent(this, LoadInitDBService::class.java)
+        startService(serviceIntent)
+
+        LoadInitDBService.scheduleJob(this)
+    }
+
+    override fun onStop() {
+        /*FIXME: check if job is finished*/
+        LoadInitDBService.cancelJob(this)
+
+        val serviceIntent = Intent(this, LoadInitDBService::class.java)
+        stopService(serviceIntent)
+
+        super.onStop()
     }
 
     override fun onDestroy() {

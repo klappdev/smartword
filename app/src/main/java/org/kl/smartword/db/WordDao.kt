@@ -4,9 +4,9 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 import org.kl.smartword.model.Word

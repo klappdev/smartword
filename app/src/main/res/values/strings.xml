@@ -22,6 +22,15 @@
     <string name="other_form_hint">other form</string>
     <string name="antonym_hint">antonym</string>
     <string name="irregular_hint">irregular</string>
+    <string name="unknown_hint">unknown</string>
+
+    <string name="transcription_title">transcription:</string>
+    <string name="translation_title">translation:</string>
+    <string name="association_title">association:</string>
+    <string name="etymology_title">etymology:</string>
+    <string name="other_form_title">other form:</string>
+    <string name="antonym_title">antonym:</string>
+    <string name="irregular_title">irregular:</string>
 
     <string name="add_title">Add</string>
     <string name="sort_title">Sort</string>

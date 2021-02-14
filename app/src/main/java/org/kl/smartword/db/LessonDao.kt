@@ -1,13 +1,13 @@
 package org.kl.smartword.db
 
 import android.content.ContentValues
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.database.Cursor
 import android.util.Log
 
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 import org.kl.smartword.model.Lesson
@@ -56,13 +56,13 @@ object LessonDao {
         }
     }
 
-    private fun addAllSynchronously(vararg lessons: Lesson) {
+    private fun addAllSynchronously(lessons: List<Lesson>) {
         lessons.forEach(::addSynchronously)
     }
 
-    fun addAll(vararg lessons: Lesson): Completable {
+    fun addAll(lessons: List<Lesson>): Completable {
         return Completable.fromRunnable {
-            addAllSynchronously(*lessons)
+            addAllSynchronously(lessons)
         }
     }
 
