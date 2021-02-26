@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".view.EditWordActivity">
+    tools:context=".view.activity.EditWordActivity">
 
     <ImageView
         android:id="@+id/item_word_image"
@@ -76,7 +76,7 @@
         android:hint="@string/etymology_hint"/>
 
     <EditText
-        android:id="@+id/other_form_word_text_view"
+        android:id="@+id/description_word_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -84,29 +84,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_weight="0.5"
-        android:hint="@string/other_form_hint"/>
-
-    <EditText
-        android:id="@+id/antonym_word_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="0.5"
-        android:hint="@string/antonym_hint"/>
-
-    <EditText
-        android:id="@+id/irregular_word_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="0.5"
-        android:hint="@string/irregular_hint"/>
+        android:hint="@string/description_hint"/>
 
     <LinearLayout
         android:layout_width="match_parent"

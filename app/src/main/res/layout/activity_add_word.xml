@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
-    tools:context=".view.AddWordActivity">
+    tools:context=".view.activity.AddWordActivity">
 
     <ImageView
         android:id="@+id/item_word_image"
@@ -17,19 +17,55 @@
         android:layout_gravity="center"
         android:src="@drawable/word_icon" />
 
-    <EditText
-        android:id="@+id/name_word_text_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_height="wrap_content"
         android:layout_weight="0.5"
+        android:orientation="horizontal">
 
-        android:hint="@string/name_hint"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/name_word_text_view"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+
+            android:layout_margin="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="0.5"
+
+            android:hint="@string/name_hint"
+            android:inputType="text" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/load_word_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+
+            app:fabCustomSize="48dp"
+            app:maxImageSize="24dp"
+            app:backgroundTint="@color/gray_color"
+            app:srcCompat="@android:drawable/ic_menu_search"
+            tools:ignore="RelativeOverlap"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/voice_word_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+
+            app:fabCustomSize="48dp"
+            app:maxImageSize="24dp"
+            app:backgroundTint="@color/gray_color"
+            tools:ignore="RelativeOverlap"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/transcription_word_text_view"
@@ -76,7 +112,7 @@
         android:hint="@string/etymology_hint"/>
 
     <EditText
-        android:id="@+id/other_form_word_text_view"
+        android:id="@+id/description_word_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -84,29 +120,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_weight="0.5"
-        android:hint="@string/other_form_hint"/>
-
-    <EditText
-        android:id="@+id/antonym_word_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="0.5"
-        android:hint="@string/antonym_hint"/>
-
-    <EditText
-        android:id="@+id/irregular_word_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_weight="0.5"
-        android:hint="@string/irregular_hint"/>
+        android:hint="@string/description_hint"/>
 
     <LinearLayout
         android:layout_width="match_parent"

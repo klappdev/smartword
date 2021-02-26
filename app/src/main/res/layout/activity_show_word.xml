@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/Theme.MaterialComponents.Light"
     android:id="@+id/word_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -163,14 +164,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/other_form_title"
+                    android:text="@string/description_title"
                     android:textSize="16sp"
                     android:textStyle="bold|italic"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/colorPrimary"/>
 
                 <TextView
-                    android:id="@+id/other_form_word_text_view"
+                    android:id="@+id/description_word_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -181,64 +182,6 @@
                     android:textColor="?android:attr/textColorSecondary"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/antonym_title"
-                    android:textSize="16sp"
-                    android:textStyle="bold|italic"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="@color/colorPrimary"/>
-
-                <TextView
-                    android:id="@+id/antonym_word_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/unknown_hint"
-                    android:textSize="16sp"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/irregular_title"
-                    android:textSize="16sp"
-                    android:textStyle="bold|italic"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="@color/colorPrimary"/>
-
-                <TextView
-                    android:id="@+id/irregular_word_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/unknown_hint"
-                    android:textSize="16sp"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"/>
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

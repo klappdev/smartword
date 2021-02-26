@@ -3,40 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.kl.smartword">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
-            android:name=".view.ShowWordActivity"
+            android:name=".view.activity.ShowWordActivity"
             android:label="@string/show_word_name">
         </activity>
         <activity
-            android:name=".view.EditWordActivity"
+            android:name=".view.activity.EditWordActivity"
             android:label="@string/edit_word_name">
         </activity>
         <activity
-            android:name=".view.AddWordActivity"
+            android:name=".view.activity.AddWordActivity"
             android:label="@string/add_word_name">
         </activity>
         <activity
-            android:name=".view.ShowLessonActivity"
+            android:name=".view.activity.ShowLessonActivity"
             android:label="@string/show_lesson_name">
         </activity>
         <activity
-            android:name=".view.EditLessonActivity"
+            android:name=".view.activity.EditLessonActivity"
             android:label="@string/edit_lesson_name">
         </activity>
         <activity
-            android:name=".view.AddLessonActivity"
+            android:name=".view.activity.AddLessonActivity"
             android:label="@string/add_lesson_name">
         </activity>
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -47,7 +54,11 @@
         </activity>
 		
 		<service
-            android:name=".work.LoadInitDBService"
+            android:name=".work.LoadLessonService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
+        <service
+            android:name=".work.LoadWordService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
     </application>

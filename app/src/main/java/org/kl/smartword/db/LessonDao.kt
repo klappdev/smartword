@@ -1,20 +1,44 @@
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.kl.smartword.db
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.database.Cursor
-import android.util.Log
 
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 
+import timber.log.Timber
 import org.kl.smartword.model.Lesson
 
-object LessonDao {
-    private const val TAG = "TAG-LDB"
+class LessonDao {
     internal var database: SQLiteDatabase? = null
+    internal var dataSubject: BehaviorSubject<List<Lesson>> = BehaviorSubject.create()
 
     fun create(database: SQLiteDatabase?) {
         database?.execSQL("""CREATE TABLE IF NOT EXISTS lesson (
@@ -26,7 +50,7 @@ object LessonDao {
                           """
         )
 
-        Log.d(TAG, "Create table lesson")
+        Timber.d("Create table lesson")
     }
 
     fun upgrade(database: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -35,7 +59,7 @@ object LessonDao {
             create(database)
         }
 
-        Log.d(TAG, "Upgrade table lesson")
+        Timber.d("Upgrade table lesson")
     }
 
     private fun addSynchronously(lesson: Lesson) {
@@ -47,7 +71,7 @@ object LessonDao {
 
         val rowId: Long? = database?.insert("lesson", null, values)
 
-        Log.d(TAG, "Inserted new row table: $rowId")
+        Timber.d("Inserted new row table: $rowId")
     }
 
     fun add(lesson: Lesson): Completable {
@@ -56,13 +80,9 @@ object LessonDao {
         }
     }
 
-    private fun addAllSynchronously(lessons: List<Lesson>) {
-        lessons.forEach(::addSynchronously)
-    }
-
     fun addAll(lessons: List<Lesson>): Completable {
         return Completable.fromRunnable {
-            addAllSynchronously(lessons)
+            lessons.forEach(::addSynchronously)
         }
     }
 
@@ -75,7 +95,7 @@ object LessonDao {
 
         database?.update("lesson", values, "id = ?", arrayOf(lesson.id.toString()))
 
-        Log.d(TAG, "Updated row table: ${lesson.id}")
+        Timber.d("Updated row table: ${lesson.id}")
     }
 
     fun update(lesson: Lesson): Completable {
@@ -97,7 +117,7 @@ object LessonDao {
     private fun deleteSynchronously(id: Long) {
         database?.delete("lesson", "id = ?", arrayOf(id.toString()))
 
-        Log.d(TAG, "Deleted row table: $id")
+        Timber.d("Deleted row table: $id")
     }
 
     fun delete(id: Long): Completable {
@@ -106,13 +126,34 @@ object LessonDao {
         }
     }
 
-    private fun checkIfExistsSynchronously(name: String): Boolean {
+    private fun checkIfEmptySynchronously(): Boolean {
         var result = false
-        val cursor = database?.rawQuery("SELECT * FROM lesson WHERE name=?", arrayOf(name.trim()))
+        val cursor = database?.rawQuery("SELECT COUNT(*) FROM lesson", null)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                result = true
+                result = (cursor.getInt(0) == 0)
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        return result
+    }
+
+    fun checkIfEmpty(): Single<Boolean> {
+        return Single.fromCallable {
+            checkIfEmptySynchronously()
+        }
+    }
+
+    private fun checkIfExistsSynchronously(name: String): Boolean {
+        var result = false
+        val cursor = database?.rawQuery("SELECT COUNT(*) FROM lesson WHERE name=?", arrayOf(name.trim()))
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = (cursor.getInt(0) != 0)
             }
         } finally {
             cursor?.close()
@@ -145,7 +186,7 @@ object LessonDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Retrieve all row table by id: $id")
+        Timber.d("Retrieve all row table by id: $id")
 
         return Lesson()
     }
@@ -176,7 +217,7 @@ object LessonDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Retrieve all rows table")
+        Timber.d("Retrieve all rows table")
 
         return lessons
     }
@@ -185,10 +226,34 @@ object LessonDao {
         return Observable.fromCallable(::getAllSynchronously)
     }
 
+    private fun getAllIdsSynchronously(): List<Long> {
+        val listIds = mutableListOf<Long>()
+        val column = arrayOf("id")
+        val cursor: Cursor? = database?.query("lesson", column, null, null, null, null, null)
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    listIds += cursor.getLong(cursor.getColumnIndex("id"))
+                } while (cursor.moveToNext())
+            }
+        } finally {
+            cursor?.close()
+        }
+
+        Timber.d("Retrieve all ids table")
+
+        return listIds
+    }
+
+    fun getAllIds(): Observable<List<Long>> {
+        return Observable.fromCallable(::getAllIdsSynchronously)
+    }
+
     private fun searchByNameSynchronously(name: String): List<Lesson> {
         val lessons = mutableListOf<Lesson>()
-        val arguments = arrayOf("%${name}%")
-        val cursor = database?.query("lesson", null, "name LIKE ?", arguments, null, null, null)
+        val arguments = arrayOf(name)
+        val cursor = database?.query("lesson", null, "name LIKE '%' || ? || '%'", arguments, null, null, null)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -206,7 +271,7 @@ object LessonDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Search all rows table by name: $name")
+        Timber.d("Search all rows table by name: $name")
 
         return lessons
     }
@@ -219,9 +284,8 @@ object LessonDao {
 
     private fun sortByNameSynchronously(asc: Boolean): List<Lesson> {
         val lessons = mutableListOf<Lesson>()
-        val columns = arrayOf("id", "name", "description", "date", "icon_url")
         val orderBy = if (asc) "name ASC" else "name DESC"
-        val cursor = database?.query("lesson", columns, null, null, null, null, orderBy)
+        val cursor = database?.query("lesson", null, null, null, null, null, orderBy)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -239,7 +303,7 @@ object LessonDao {
             cursor?.close()
         }
 
-        Log.d(TAG, "Sort all rows table by $orderBy")
+        Timber.d("Sort all rows table by $orderBy")
 
         return lessons
     }

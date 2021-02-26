@@ -1,3 +1,26 @@
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.kl.smartword.event.word
 
 import android.view.MenuItem
@@ -7,48 +30,37 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
-import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.ShowLessonActivity
-import org.kl.smartword.view.adapter.LessonAdapter
+import org.kl.smartword.view.activity.ShowLessonActivity
 
-class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
-    private val activity: ShowLessonActivity
-    private val disposables: CompositeDisposable
-    private val lessonAdapter: LessonAdapter
+class SearchWordListener(
+    private val activity: ShowLessonActivity,
+    private val idLesson: Long
+) : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
+    private val wordDao = activity.wordDao
+    private val lessonAdapter = activity.lessonAdapter
+    private val disposables = activity.disposables
 
     private var searchView: SearchView? = null
     private var searchInput: TextView? = null
     private var closeIcon: ImageView? = null
     private var currentSize: Int = -1
 
-    constructor(activity: ShowLessonActivity, lessonAdapter: LessonAdapter, disposables: CompositeDisposable) {
-        this.activity = activity
-        this.lessonAdapter = lessonAdapter
-        this.disposables = disposables
-    }
-
     override fun onQueryTextChange(newText: String?): Boolean {
         if (!newText.isNullOrEmpty()) {
-            disposables.add(WordDao.searchByName(newText)
+            disposables.add(wordDao.searchByName(newText, idLesson)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<List<Word>>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(result: List<Word>) {
+                .subscribe { result: List<Word> ->
                         lessonAdapter.listWords.clear()
                         lessonAdapter.listWords.addAll(result)
                         lessonAdapter.notifyDataSetChanged()
 
                         currentSize = result.size
-                    }
-                }))
+                })
         } else {
             refreshWords()
         }
@@ -82,24 +94,20 @@ class SearchWordListener : View.OnClickListener, MenuItem.OnActionExpandListener
 
     override fun onClick(view: View?) {
         refreshWords()
-        this.searchInput?.text = ""
+        searchInput?.text = ""
     }
 
     private fun refreshWords() {
-        disposables.add(WordDao.getAll()
+        disposables.add(wordDao.getAllByIdLesson(idLesson)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<List<Word>>() {
-                override fun onComplete() {}
-                override fun onError(e: Throwable) {}
-                override fun onNext(result: List<Word>) {
-                    if (currentSize != -1 && currentSize != result.size) {
-                        lessonAdapter.listWords.clear()
-                        lessonAdapter.listWords.addAll(result)
-                        lessonAdapter.notifyDataSetChanged()
-                        currentSize = -1
-                    }
+            .subscribe { result: List<Word> ->
+                if (currentSize != -1 && currentSize != result.size) {
+                    lessonAdapter.listWords.clear()
+                    lessonAdapter.listWords.addAll(result)
+                    lessonAdapter.notifyDataSetChanged()
+                    currentSize = -1
                 }
-            }))
+            })
     }
 }
