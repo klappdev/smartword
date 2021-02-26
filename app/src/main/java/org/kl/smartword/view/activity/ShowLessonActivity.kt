@@ -1,4 +1,27 @@
-package org.kl.smartword.view
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.kl.smartword.view.activity
 
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +32,7 @@ import android.widget.TextView
 
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import javax.inject.Inject
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,6 +40,7 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
+import org.kl.smartword.WordApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.word.*
 import org.kl.smartword.model.Word
@@ -24,18 +49,25 @@ import org.kl.smartword.view.adapter.LessonAdapter
 class ShowLessonActivity : AppCompatActivity() {
     private lateinit var emptyTextView: TextView
     private lateinit var wordsListView: ListView
-    private lateinit var lessonAdapter: LessonAdapter
-    private val disposables = CompositeDisposable()
+    public  lateinit var lessonAdapter: LessonAdapter
 
     private lateinit var addWordButton: FloatingActionButton
     private lateinit var navigateWordListener: NavigateWordListener
     private lateinit var resetWordListener: ResetWordListener
     private lateinit var sortWordListener: SortWordListener
     private lateinit var deleteWordListener: DeleteWordListener
+
+    @Inject
+    public lateinit var wordDao: WordDao
+
+    @Inject
+    public lateinit var disposables: CompositeDisposable
     private var menuItemSelected: Boolean = false
     private var idLesson: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as WordApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words)
 
@@ -58,7 +90,7 @@ class ShowLessonActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_word, menu)
 
         val searchMenuItem = menu?.findItem(R.id.action_word_search)
-        searchMenuItem?.setOnActionExpandListener(SearchWordListener(this, lessonAdapter, disposables))
+        searchMenuItem?.setOnActionExpandListener(SearchWordListener(this, idLesson))
 
         return true
     }
@@ -91,9 +123,9 @@ class ShowLessonActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        this.resetWordListener = ResetWordListener(this, lessonAdapter)
-        this.sortWordListener = SortWordListener(lessonAdapter, disposables)
-        this.deleteWordListener = DeleteWordListener(lessonAdapter, disposables)
+        this.resetWordListener = ResetWordListener(this)
+        this.sortWordListener = SortWordListener(this, idLesson)
+        this.deleteWordListener = DeleteWordListener(this)
 
         addWordButton.setOnClickListener(navigateWordListener::navigateAddWord)
     }
@@ -118,7 +150,7 @@ class ShowLessonActivity : AppCompatActivity() {
     }
 
     private fun initWords() {
-        disposables.add(WordDao.getAllByIdLesson(idLesson)
+        disposables.add(wordDao.getAllByIdLesson(idLesson)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<List<Word>>() {

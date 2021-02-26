@@ -1,3 +1,26 @@
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.kl.smartword.db
 
 import android.content.ContentValues
@@ -11,8 +34,8 @@ import io.reactivex.Observable
 
 import org.kl.smartword.model.Word
 
-object WordDao {
-    private const val TAG = "TAG-WDB"
+class WordDao {
+    private val TAG = "TAG-WDB"
     internal var database: SQLiteDatabase? = null
 
 	fun create(database: SQLiteDatabase?) {
@@ -24,9 +47,7 @@ object WordDao {
                              translation TEXT NOT NULL,							 
 							 association TEXT NOT NULL,
 							 etymology TEXT NOT NULL,
-							 other_form TEXT NOT NULL,
-							 antonym TEXT NOT NULL,
-							 irregular TEXT NOT NULL,
+							 description TEXT NOT NULL,
                              date TEXT NOT NULL);
                           """)
 
@@ -50,9 +71,7 @@ object WordDao {
         values.put("translation", word.translation)
         values.put("association", word.association)
         values.put("etymology", word.etymology)
-        values.put("other_form", word.otherForm)
-        values.put("antonym", word.antonym)
-        values.put("irregular", word.irregular)
+        values.put("description", word.description)
         values.put("date", word.date)
 
         val rowId = database?.insert("word", null, values)
@@ -66,6 +85,12 @@ object WordDao {
         }
     }
 
+    fun addAll(words: List<Word>): Completable {
+        return Completable.fromRunnable {
+            words.forEach(::addSynchronously)
+        }
+    }
+
     private fun updateSynchronously(word: Word) {
         val values = ContentValues()
         values.put("id_lesson", word.idLesson)
@@ -74,9 +99,7 @@ object WordDao {
         values.put("translation", word.translation)
         values.put("association", word.association)
         values.put("etymology", word.etymology)
-        values.put("other_form", word.otherForm)
-        values.put("antonym", word.antonym)
-        values.put("irregular", word.irregular)
+        values.put("description", word.description)
         values.put("date", word.date)
 
         database?.update("word", values, "id = ?", arrayOf(word.id.toString()))
@@ -104,11 +127,11 @@ object WordDao {
 
     private fun checkIfExistsSynchronously(name: String): Boolean {
         var result = false
-        val cursor = database?.rawQuery("SELECT * FROM word WHERE name=?", arrayOf(name.trim()))
+        val cursor = database?.rawQuery("SELECT COUNT(*) FROM word WHERE name=?", arrayOf(name.trim()))
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                result = true
+                result = (cursor.getInt(0) != 0)
             }
         } finally {
             cursor?.close()
@@ -136,9 +159,7 @@ object WordDao {
                             cursor.getString(cursor.getColumnIndex("translation")),
                             cursor.getString(cursor.getColumnIndex("association")),
                             cursor.getString(cursor.getColumnIndex("etymology")),
-                            cursor.getString(cursor.getColumnIndex("other_form")),
-                            cursor.getString(cursor.getColumnIndex("antonym")),
-                            cursor.getString(cursor.getColumnIndex("irregular")),
+                            cursor.getString(cursor.getColumnIndex("description")),
                             cursor.getString(cursor.getColumnIndex("date"))
                 )
             }
@@ -172,9 +193,7 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("translation")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
-                        cursor.getString(cursor.getColumnIndex("other_form")),
-                        cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("description")),
                         cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
@@ -208,9 +227,7 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("translation")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
-                        cursor.getString(cursor.getColumnIndex("other_form")),
-                        cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("description")),
                         cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
@@ -230,10 +247,10 @@ object WordDao {
         }
     }
 
-    private fun searchByNameSynchronously(name: String): List<Word> {
+    private fun searchByNameSynchronously(name: String, idLesson: Long): List<Word> {
         val words = mutableListOf<Word>()
-        val arguments = arrayOf("%${name}%")
-        val cursor = database?.query("word", null, "name LIKE ?", arguments, null, null, null)
+        val arguments = arrayOf(idLesson.toString(), "%${name}%")
+        val cursor = database?.query("word", null, "id_lesson = ? AND name LIKE ?", arguments, null, null, null)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -246,9 +263,7 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("translation")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
-                        cursor.getString(cursor.getColumnIndex("other_form")),
-                        cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("description")),
                         cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
@@ -262,16 +277,17 @@ object WordDao {
         return words
     }
 
-    fun searchByName(name: String): Observable<List<Word>> {
+    fun searchByName(name: String, idLesson: Long): Observable<List<Word>> {
         return Observable.fromCallable {
-            searchByNameSynchronously(name)
+            searchByNameSynchronously(name, idLesson)
         }
     }
 
-    private fun sortByNameSynchronously(asc: Boolean): List<Word> {
+    private fun sortByNameSynchronously(idLesson: Long, asc: Boolean): List<Word> {
         val words = mutableListOf<Word>()
+        val arguments = arrayOf(idLesson.toString())
         val orderBy = if (asc) "name ASC" else "name DESC"
-        val cursor = database?.query("word", null, null, null, null, null, orderBy)
+        val cursor = database?.query("word", null, "id_lesson = ?", arguments, null, null, orderBy)
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -284,9 +300,7 @@ object WordDao {
                         cursor.getString(cursor.getColumnIndex("translation")),
                         cursor.getString(cursor.getColumnIndex("association")),
                         cursor.getString(cursor.getColumnIndex("etymology")),
-                        cursor.getString(cursor.getColumnIndex("other_form")),
-                        cursor.getString(cursor.getColumnIndex("antonym")),
-                        cursor.getString(cursor.getColumnIndex("irregular")),
+                        cursor.getString(cursor.getColumnIndex("description")),
                         cursor.getString(cursor.getColumnIndex("date"))
                     )
                 } while (cursor.moveToNext())
@@ -300,9 +314,9 @@ object WordDao {
         return words
     }
 
-    fun sortByName(asc: Boolean): Observable<List<Word>> {
+    fun sortByName(idLesson: Long, asc: Boolean): Observable<List<Word>> {
         return Observable.fromCallable {
-            sortByNameSynchronously(asc)
+            sortByNameSynchronously(idLesson, asc)
         }
     }
 }

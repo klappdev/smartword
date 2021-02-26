@@ -1,9 +1,33 @@
-package org.kl.smartword.view
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.kl.smartword.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import javax.inject.Inject
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -11,7 +35,9 @@ import io.reactivex.observers.DisposableMaybeObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
+import org.kl.smartword.WordApplication
 import org.kl.smartword.db.WordDao
+import org.kl.smartword.event.validate.ViewValidator
 import org.kl.smartword.model.Word
 import org.kl.smartword.event.word.EditWordListener
 
@@ -27,15 +53,21 @@ class EditWordActivity : AppCompatActivity() {
         private set
     lateinit var etymologyTextView: TextView
         private set
-    lateinit var otherFormTextView: TextView
+    lateinit var descriptionTextView: TextView
         private set
-    lateinit var antonymTextView: TextView
-        private set
-    lateinit var irregularTextView: TextView
-        private set
-    val disposables = CompositeDisposable()
+
+    @Inject
+    public lateinit var wordDao: WordDao
+
+    @Inject
+    public lateinit var viewValidator: ViewValidator
+
+    @Inject
+    public lateinit var disposables: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as WordApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_word)
 
@@ -54,16 +86,14 @@ class EditWordActivity : AppCompatActivity() {
         this.translationTextView = findViewById(R.id.translation_word_text_view)
         this.associationTextView = findViewById(R.id.association_word_text_view)
         this.etymologyTextView = findViewById(R.id.etymology_word_text_view)
-        this.otherFormTextView = findViewById(R.id.other_form_word_text_view)
-        this.antonymTextView = findViewById(R.id.antonym_word_text_view)
-        this.irregularTextView = findViewById(R.id.irregular_word_text_view)
+        this.descriptionTextView = findViewById(R.id.description_word_text_view)
         this.editButton = findViewById(R.id.edit_word_button)
     }
 
     private fun initWord() {
         val idWord = intent.getLongExtra("id_word", -1)
 
-        disposables.add(WordDao.getById(idWord)
+        disposables.add(wordDao.getById(idWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableMaybeObserver<Word>() {
@@ -75,9 +105,7 @@ class EditWordActivity : AppCompatActivity() {
                     translationTextView.text = result.translation
                     associationTextView.text = result.association
                     etymologyTextView.text = result.etymology
-                    otherFormTextView.text = result.otherForm
-                    antonymTextView.text = result.antonym
-                    irregularTextView.text = result.irregular
+                    descriptionTextView.text = result.description
 
                     val listener = EditWordListener(this@EditWordActivity, result.id, result.idLesson)
                     editButton.setOnClickListener(listener)

@@ -1,5 +1,30 @@
-package org.kl.smartword.view
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.kl.smartword.view.activity
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,73 +36,66 @@ import androidx.viewpager.widget.ViewPager
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
-import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 import org.kl.smartword.R
+import org.kl.smartword.WordApplication
 import org.kl.smartword.db.DatabaseHelper
 import org.kl.smartword.view.adapter.SectionPagerAdapter
-import org.kl.smartword.view.fragment.DictionaryFragment
 import org.kl.smartword.event.tab.ChangeTabListener
+import org.kl.smartword.view.fragment.*
 import org.kl.smartword.event.lesson.*
-import org.kl.smartword.work.LoadInitDBService
+import org.kl.smartword.work.LoadDictionaryService
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var dbHelper: DatabaseHelper
-    private lateinit var pagerAdapter: SectionPagerAdapter
+    @Inject
+    public lateinit var dbHelper: DatabaseHelper
+
+    @Inject
+    public lateinit var jobScheduler: JobScheduler
+
+    @Inject
+    public lateinit var jobInfo: JobInfo
+
     private lateinit var dictionaryFragment: DictionaryFragment
-    private val disposables = CompositeDisposable()
+    private lateinit var categoryFragment: CategoryFragment
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
     private lateinit var toolbar: Toolbar
     private lateinit var addLessonButton: FloatingActionButton
 
-    lateinit var navigateLessonListener: NavigateLessonListener
+    public  lateinit var navigateLessonListener: NavigateLessonListener
     private lateinit var resetLessonListener: ResetLessonListener
     private lateinit var sortLessonListener: SortLessonListener
     private lateinit var deleteLessonListener: DeleteLessonListener
-    private var menuItemSelected: Boolean = false
+    private var menuItemSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as WordApplication).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initTabs()
-
-        this.dbHelper = DatabaseHelper(applicationContext)
-        this.addLessonButton = findViewById(R.id.add_lesson_button)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        val serviceIntent = Intent(this, LoadInitDBService::class.java)
-        startService(serviceIntent)
-
-        LoadInitDBService.scheduleJob(this)
+        initView()
+        startService()
     }
 
     override fun onStop() {
-        /*FIXME: check if job is finished*/
-        LoadInitDBService.cancelJob(this)
-
-        val serviceIntent = Intent(this, LoadInitDBService::class.java)
-        stopService(serviceIntent)
-
+        stopService()
         super.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        this.dbHelper.close()
+        dbHelper.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
         val searchMenuItem = menu?.findItem(R.id.action_lesson_search)
-        searchMenuItem?.setOnActionExpandListener(SearchLessonListener(dictionaryFragment, disposables))
+        searchMenuItem?.setOnActionExpandListener(SearchLessonListener(dictionaryFragment))
 
         return true
     }
@@ -109,18 +127,36 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun initListeners(dictionaryFragment: DictionaryFragment) {
-        this.dictionaryFragment = dictionaryFragment
+    fun initCategoryListeners(fragment: CategoryFragment) {
+        this.categoryFragment = fragment
 
-        this.navigateLessonListener = NavigateLessonListener(dictionaryFragment)
-        this.sortLessonListener = SortLessonListener(dictionaryFragment, disposables)
-        this.deleteLessonListener = DeleteLessonListener(dictionaryFragment, disposables)
-        this.resetLessonListener = ResetLessonListener(dictionaryFragment)
+        /*TODO: init listeners*/
+    }
+
+    fun initDictionaryListeners(fragment: DictionaryFragment) {
+        this.dictionaryFragment = fragment
+
+        this.navigateLessonListener = NavigateLessonListener(fragment)
+        this.sortLessonListener = SortLessonListener(fragment)
+        this.deleteLessonListener = DeleteLessonListener(fragment)
+        this.resetLessonListener = ResetLessonListener(fragment)
 
         addLessonButton.setOnClickListener(navigateLessonListener::navigateAddLesson)
     }
 
-    private fun initTabs() {
+    private fun startService() {
+        startService(Intent(this, LoadDictionaryService::class.java))
+        jobScheduler.schedule(jobInfo)
+    }
+
+    private fun stopService() {
+        if (jobScheduler.getPendingJob(LoadDictionaryService.JOB_ID) != null) {
+            jobScheduler.cancel(LoadDictionaryService.JOB_ID)
+            stopService(Intent(this, LoadDictionaryService::class.java))
+        }
+    }
+
+    private fun initView() {
         this.toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -132,16 +168,17 @@ class MainActivity : AppCompatActivity() {
             tabGravity = TabLayout.GRAVITY_FILL
         }
 
-        this.pagerAdapter = SectionPagerAdapter(2, supportFragmentManager)
         this.viewPager = findViewById(R.id.page_container)
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
 
         with(viewPager) {
             offscreenPageLimit = 2
-            adapter = pagerAdapter
+            adapter = SectionPagerAdapter(2, supportFragmentManager)
 
             addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-            addOnPageChangeListener(ChangeTabListener(pagerAdapter, this.context))
+            addOnPageChangeListener(ChangeTabListener(adapter as SectionPagerAdapter, context))
         }
+
+        this.addLessonButton = findViewById(R.id.add_lesson_button)
     }
 }

@@ -1,3 +1,26 @@
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.kl.smartword.event.lesson
 
 import android.view.MenuItem
@@ -7,49 +30,38 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
-import org.kl.smartword.db.LessonDao
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.MainActivity
-import org.kl.smartword.view.adapter.DictionaryAdapter
+import org.kl.smartword.view.activity.MainActivity
 import org.kl.smartword.view.fragment.DictionaryFragment
 
-class SearchLessonListener : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
-    private val activity: MainActivity
-    private val disposables: CompositeDisposable
-    private val dictionaryAdapter: DictionaryAdapter
+class SearchLessonListener(
+    dictionaryFragment: DictionaryFragment
+) : View.OnClickListener, MenuItem.OnActionExpandListener, SearchView.OnQueryTextListener {
+    private val lessonDao = dictionaryFragment.lessonDao
+    private val disposables = dictionaryFragment.disposables
+    private val dictionaryAdapter = dictionaryFragment.dictionaryAdapter
+    private val activity = dictionaryFragment.activity as MainActivity
 
     private var searchView: SearchView? = null
     private var searchInput: TextView? = null
     private var closeIcon: ImageView? = null
     private var currentSize: Int = -1
 
-    constructor(dictionaryFragment: DictionaryFragment, disposables: CompositeDisposable) {
-        this.activity = dictionaryFragment.activity as MainActivity
-        this.dictionaryAdapter = dictionaryFragment.dictionaryAdapter
-        this.disposables = disposables
-    }
-
     override fun onQueryTextChange(newText: String?): Boolean {
         if (!newText.isNullOrEmpty()) {
-            disposables.add(LessonDao.searchByName(newText)
+            disposables.add(lessonDao.searchByName(newText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object: DisposableObserver<List<Lesson>>() {
-                    override fun onComplete() {}
-                    override fun onError(e: Throwable) {}
-                    override fun onNext(result: List<Lesson>) {
-                        dictionaryAdapter.listLessons.clear()
-                        dictionaryAdapter.listLessons.addAll(result)
-                        dictionaryAdapter.notifyDataSetChanged()
+                .subscribe { result: List<Lesson> ->
+                    dictionaryAdapter.listLessons.clear()
+                    dictionaryAdapter.listLessons.addAll(result)
+                    dictionaryAdapter.notifyDataSetChanged()
 
-                        currentSize = result.size
-                    }
-                }))
+                    currentSize = result.size
+                })
         } else {
             refreshLessons()
         }
@@ -83,24 +95,20 @@ class SearchLessonListener : View.OnClickListener, MenuItem.OnActionExpandListen
 
     override fun onClick(view: View?) {
         refreshLessons()
-        this.searchInput?.text = ""
+        searchInput?.text = ""
     }
 
     private fun refreshLessons() {
-        disposables.add(LessonDao.getAll()
+        disposables.add(lessonDao.getAll()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<List<Lesson>>() {
-                override fun onComplete() {}
-                override fun onError(e: Throwable) {}
-                override fun onNext(result: List<Lesson>) {
-                    if (currentSize != -1 && currentSize != result.size) {
-                        dictionaryAdapter.listLessons.clear()
-                        dictionaryAdapter.listLessons.addAll(result)
-                        dictionaryAdapter.notifyDataSetChanged()
-                        currentSize = -1
-                    }
+            .subscribe { result: List<Lesson> ->
+                if (currentSize != -1 && currentSize != result.size) {
+                    dictionaryAdapter.listLessons.clear()
+                    dictionaryAdapter.listLessons.addAll(result)
+                    dictionaryAdapter.notifyDataSetChanged()
+                    currentSize = -1
                 }
-            }))
+            })
     }
 }

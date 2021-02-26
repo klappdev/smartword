@@ -1,31 +1,46 @@
+/*
+ * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ *
+ * Permission is hereby  granted, free of charge, to any  person obtaining a copy
+ * of this software and associated  documentation files (the "Software"), to deal
+ * in the Software  without restriction, including without  limitation the rights
+ * to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+ * copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+ * IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+ * FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+ * AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.kl.smartword.event.validate
 
 import android.widget.TextView
 
 class ViewValidator {
-    private constructor() {
-        throw IllegalAccessException("Can't create validator instance")
+    fun error(inputField: TextView, message: String) {
+        inputField.requestFocus()
+        inputField.error = message
     }
 
-    companion object {
-        @JvmStatic
-        fun error(inputField: TextView, message: String) {
+    fun validate(inputField: TextView, message: String) : Boolean {
+        val text: String = inputField.text.toString()
+
+        if (text.isEmpty()) {
             inputField.requestFocus()
             inputField.error = message
+            return false
         }
 
-        @JvmStatic
-        fun validate(inputField: TextView, message: String) : Boolean {
-            val text: String = inputField.text.toString()
-
-            if (text.isEmpty()) {
-                inputField.requestFocus()
-                inputField.error = message
-                return false
-            }
-
-            return true
-        }
+        return true
     }
 }
 

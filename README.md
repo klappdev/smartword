@@ -11,7 +11,17 @@ quick learning of words, expressions, constructions is very in demand.
 ![List of lessons](screenshot/smartword_1.jpg "A list of lessons")
 ![List of words](screenshot/smartword_2.jpg "A list of words")
 
+Used Android libraries:
+-----------------------
+  * AppCompat
+  * SQLite
+  * JobScheduler
+
 Used third party libraries:
 --------------------------
   * Glide
-  * RxJava
+  * RxJava2
+  * Retrofit2
+  * Gson
+  * Okhttp3
+  * Dagger2

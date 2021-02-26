@@ -1,5 +1,92 @@
 [
   {
-
+	"id": 1,
+	"idLesson": 1,
+	"name": "le/la chat(e)",
+	"transcription":"[]",
+	"translation":"кошка",
+	"association":"-",
+	"etymology":"-",
+	"description":"chaton"
+  },
+  {
+	"id": 2,
+	"idLesson": 1,
+	"name": "le chien",
+	"transcription":"[]",
+	"translation":"собака",
+	"association":"-",
+	"etymology":"-",
+	"description":"le chiot"
+  },
+  {
+	"id": 3,
+	"idLesson": 1,
+	"name": "le lapin",
+	"transcription":"[]",
+	"translation":"кролик",
+	"association":"кролик по имени Ляпа",
+	"etymology":"-",
+	"description":"-"
+  },
+  {
+	"id": 4,
+	"idLesson": 2,
+	"name": "le poisson-chat",
+	"transcription":"[]",
+	"translation":"сом",
+	"association":"-",
+	"etymology":"рыба кит",
+	"description":"-"
+  },
+  {
+	"id": 5,
+	"idLesson": 2,
+	"name": "le brochet",
+	"transcription": "[]",
+	"translation": "щука",
+	"association": "Икринка щуки как брошки",
+	"etymology": "broche - голка, шпилька",
+	"description": "-"
+  },
+  {
+	"id": 6,
+	"idLesson": 2,
+	"name": "le perchoir",
+	"transcription": "[]",
+	"translation": "окунь",
+	"association": "-",
+	"etymology": "perce - колится",
+	"description": "percer - колоть"
+  },
+  {
+	"id": 7,
+	"idLesson": 3,
+	"name": "oeillet",
+	"transcription": "[]",
+	"translation": "гвоздика",
+	"association": "",
+	"etymology": "oeillet -> oeil - (ст.фр.) - глаз, ueil",
+	"description": "-"
+  },
+  {
+	"id": 8,
+	"idLesson": 3,
+	"name": "Muguet",
+	"transcription": "[]",
+	"translation": "ландиш",
+	"association": "",
+	"etymology": "лат. convallaria majalis, muscade - мускатный орех, похожий запах",
+	"description": "-"
+  },
+  {
+	"id": 9,
+	"idLesson": 3,
+	"name": "le camomille",
+	"transcription":"[]",
+	"translation": "ромашка",
+	"association": "-",
+	"etymology": "з грецького языка - яблуко земли",
+	"description": "в французском - pomme de terre"
   }
 ]
