@@ -31,33 +31,36 @@ import androidx.appcompat.app.AppCompatActivity
 import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.LessonDao
 import org.kl.smartword.event.lesson.AddLessonListener
 import org.kl.smartword.event.validate.ViewValidator
 
 class AddLessonActivity : AppCompatActivity() {
+    @BindView(R.id.name_lesson_text_view)
     public lateinit var nameTextView: TextView
-        private set
+    @BindView(R.id.description_lesson_text_view)
     public lateinit var descriptionTextView: TextView
-        private set
-    private lateinit var addButton: Button
+    @BindView(R.id.add_lesson_button)
+    public lateinit var addButton: Button
 
     @Inject
-    public  lateinit var lessonDao: LessonDao
-
+    public lateinit var lessonDao: LessonDao
     @Inject
     public lateinit var viewValidator: ViewValidator
-
     @Inject
     public lateinit var disposables: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_lesson)
+        ButterKnife.bind(this)
 
         initView()
     }
@@ -68,10 +71,6 @@ class AddLessonActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.nameTextView = findViewById(R.id.name_lesson_text_view)
-        this.descriptionTextView = findViewById(R.id.description_lesson_text_view)
-        this.addButton = findViewById(R.id.add_lesson_button)
-
         addButton.setOnClickListener(AddLessonListener(this))
     }
 }

@@ -25,18 +25,14 @@ package org.kl.smartword.util
 
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
-fun Date.formatted() : String {
-    val dateFormat = SimpleDateFormat("HH:mm:ss dd.MM.yyyy")
-    return dateFormat.format(this)
-}
+val Int.seconds: Long get() = TimeUnit.SECONDS.toMillis(this.toLong())
+val Int.minutes: Long get() = TimeUnit.MINUTES.toMillis(this.toLong())
+val Int.hours: Long get() = TimeUnit.HOURS.toMillis(this.toLong())
+val Int.days: Long get() = TimeUnit.DAYS.toMillis(this.toLong())
 
-fun Date.formatted(pattern: String): String {
-    val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
-    return dateFormat.format(this)
-}
-
-fun Date.formatted(pattern: String, locale: Locale): String {
+fun Date.formatted(pattern: String = "HH:mm:ss dd.MM.yyyy", locale: Locale = Locale.getDefault()): String {
     val dateFormat = SimpleDateFormat(pattern, locale)
     return dateFormat.format(this)
 }

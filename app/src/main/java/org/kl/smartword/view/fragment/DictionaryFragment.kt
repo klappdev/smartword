@@ -38,28 +38,41 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+import butterknife.BindView
+import butterknife.Unbinder
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.db.LessonDao
-import org.kl.smartword.event.lesson.ChooseLessonListener
+import org.kl.smartword.event.lesson.*
 import org.kl.smartword.view.activity.MainActivity
 import org.kl.smartword.view.adapter.DictionaryAdapter
 
 class DictionaryFragment : Fragment() {
-    private lateinit var emptyTextView: TextView
-    private lateinit var dictionaryListView: ListView
-    public  lateinit var dictionaryAdapter: DictionaryAdapter
+    private lateinit var unbinder: Unbinder
+    public lateinit var dictionaryAdapter: DictionaryAdapter
+
+    @BindView(R.id.dict_empty_text_view)
+    public lateinit var emptyTextView: TextView
+    @BindView(R.id.dict_list_view)
+    public lateinit var dictionaryListView: ListView
 
     @Inject
     public lateinit var lessonDao: LessonDao
-
     @Inject
     public lateinit var disposables: CompositeDisposable
 
+    public lateinit var navigateLessonListener: NavigateLessonListener
+    public lateinit var resetLessonListener: ResetLessonListener
+    public lateinit var sortLessonListener: SortLessonListener
+    public lateinit var deleteLessonListener: DeleteLessonListener
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater.inflate(R.layout.fragment_dictionary, container, false)
-        setHasOptionsMenu(true) 
+        setHasOptionsMenu(true)
+        unbinder = ButterKnife.bind(this, rootView)
 
         initView(rootView)
         updateLessons()
@@ -68,7 +81,7 @@ class DictionaryFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as WordApplication).appComponent.inject(this)
+        (context.applicationContext as MainApplication).appComponent.inject(this)
         super.onAttach(context)
     }
 
@@ -77,27 +90,36 @@ class DictionaryFragment : Fragment() {
         initLessons()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         disposables.dispose()
+        unbinder.unbind()
     }
 
     private fun initView(rootView: View) {
-        this.emptyTextView = rootView.findViewById(R.id.dict_empty_text_view)
-        this.dictionaryListView = rootView.findViewById(R.id.dict_list_view)
-
         dictionaryAdapter = DictionaryAdapter(rootView.context, mutableListOf())
 
         val mainActivity = (activity as MainActivity)
-        mainActivity.initDictionaryListeners(this)
+        initListeners(mainActivity)
 
         with(dictionaryListView) {
             choiceMode = ListView.CHOICE_MODE_SINGLE
             emptyView = emptyTextView
             onItemLongClickListener = ChooseLessonListener(mainActivity::notifyMenuItemSelected)
-            onItemClickListener = AdapterView.OnItemClickListener(mainActivity.navigateLessonListener::navigateShowLesson)
+            onItemClickListener = AdapterView.OnItemClickListener(navigateLessonListener::navigateShowLesson)
             adapter = dictionaryAdapter
         }
+    }
+
+    private fun initListeners(activity: MainActivity) {
+        activity.dictionaryFragment = this
+
+        this.navigateLessonListener = NavigateLessonListener(this)
+        this.sortLessonListener = SortLessonListener(this)
+        this.deleteLessonListener = DeleteLessonListener(this)
+        this.resetLessonListener = ResetLessonListener(this)
+
+        activity.addLessonButton.setOnClickListener(navigateLessonListener::navigateAddLesson)
     }
 
     private fun initLessons() {

@@ -27,18 +27,22 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
 
-class LessonViewHolder {
-    private val nameTextView: TextView
-    private val dateTextView: TextView
-    private val itemImageView: ImageView
+class LessonViewHolder(view: View) {
+    @BindView(R.id.name_lesson_text_view)
+    lateinit var nameTextView: TextView
+    @BindView(R.id.date_lesson_text_view)
+    lateinit var dateTextView: TextView
+    @BindView(R.id.item_lesson_image)
+    lateinit var itemImageView: ImageView
 
-    constructor(view: View) {
-        this.nameTextView = view.findViewById(R.id.name_lesson_text_view)
-        this.dateTextView = view.findViewById(R.id.date_lesson_text_view)
-        this.itemImageView = view.findViewById(R.id.item_lesson_image)
+    init {
+        ButterKnife.bind(this, view)
     }
 
     fun bind(item: Lesson, currentId: Long) {

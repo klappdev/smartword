@@ -38,8 +38,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import javax.inject.Inject
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.DatabaseHelper
 import org.kl.smartword.view.adapter.SectionPagerAdapter
 import org.kl.smartword.event.tab.ChangeTabListener
@@ -48,34 +51,32 @@ import org.kl.smartword.event.lesson.*
 import org.kl.smartword.work.LoadDictionaryService
 
 class MainActivity : AppCompatActivity() {
+    @BindView(R.id.toolbar)
+    public lateinit var toolbar: Toolbar
+    @BindView(R.id.tabs)
+    public lateinit var tabLayout: TabLayout
+    @BindView(R.id.page_container)
+    public lateinit var viewPager: ViewPager
+    @BindView(R.id.add_lesson_button)
+    public lateinit var addLessonButton: FloatingActionButton
+
     @Inject
     public lateinit var dbHelper: DatabaseHelper
-
     @Inject
     public lateinit var jobScheduler: JobScheduler
-
     @Inject
     public lateinit var jobInfo: JobInfo
 
-    private lateinit var dictionaryFragment: DictionaryFragment
-    private lateinit var categoryFragment: CategoryFragment
-
-    private lateinit var viewPager: ViewPager
-    private lateinit var tabLayout: TabLayout
-    private lateinit var toolbar: Toolbar
-    private lateinit var addLessonButton: FloatingActionButton
-
-    public  lateinit var navigateLessonListener: NavigateLessonListener
-    private lateinit var resetLessonListener: ResetLessonListener
-    private lateinit var sortLessonListener: SortLessonListener
-    private lateinit var deleteLessonListener: DeleteLessonListener
+    public lateinit var dictionaryFragment: DictionaryFragment
+    public lateinit var categoryFragment: CategoryFragment
     private var menuItemSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ButterKnife.bind(this)
 
         initView()
         startService()
@@ -113,10 +114,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        android.R.id.home -> resetLessonListener()
-        R.id.action_lesson_edit -> navigateLessonListener.navigateEditLesson()
-        R.id.action_lesson_sort -> sortLessonListener()
-        R.id.action_lesson_delete -> deleteLessonListener()
+        android.R.id.home -> dictionaryFragment.resetLessonListener()
+        R.id.action_lesson_edit -> dictionaryFragment.navigateLessonListener.navigateEditLesson()
+        R.id.action_lesson_sort -> dictionaryFragment.sortLessonListener()
+        R.id.action_lesson_delete -> dictionaryFragment.deleteLessonListener()
         else -> super.onOptionsItemSelected(item)
     }
 
@@ -125,23 +126,6 @@ class MainActivity : AppCompatActivity() {
         invalidateOptionsMenu()
 
         return true
-    }
-
-    fun initCategoryListeners(fragment: CategoryFragment) {
-        this.categoryFragment = fragment
-
-        /*TODO: init listeners*/
-    }
-
-    fun initDictionaryListeners(fragment: DictionaryFragment) {
-        this.dictionaryFragment = fragment
-
-        this.navigateLessonListener = NavigateLessonListener(fragment)
-        this.sortLessonListener = SortLessonListener(fragment)
-        this.deleteLessonListener = DeleteLessonListener(fragment)
-        this.resetLessonListener = ResetLessonListener(fragment)
-
-        addLessonButton.setOnClickListener(navigateLessonListener::navigateAddLesson)
     }
 
     private fun startService() {
@@ -157,10 +141,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        this.tabLayout = findViewById(R.id.tabs)
         with(tabLayout) {
             addTab(newTab().setText(R.string.category_tab))
             addTab(newTab().setText(R.string.dictionary_tab))
@@ -168,7 +150,6 @@ class MainActivity : AppCompatActivity() {
             tabGravity = TabLayout.GRAVITY_FILL
         }
 
-        this.viewPager = findViewById(R.id.page_container)
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
 
         with(viewPager) {
@@ -178,7 +159,5 @@ class MainActivity : AppCompatActivity() {
             addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
             addOnPageChangeListener(ChangeTabListener(adapter as SectionPagerAdapter, context))
         }
-
-        this.addLessonButton = findViewById(R.id.add_lesson_button)
     }
 }

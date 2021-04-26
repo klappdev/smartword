@@ -34,36 +34,45 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
 
 class ShowWordActivity : AppCompatActivity() {
-    private lateinit var nameWordTextView: TextView
-    private lateinit var dateWordTextView: TextView
-    private lateinit var transcriptionTextView: TextView
-    private lateinit var translationTextView: TextView
-    private lateinit var associationTextView: TextView
-    private lateinit var etymologyTextView: TextView
-    private lateinit var descriptionTextView: TextView
-    private lateinit var nextWordButton: MaterialButton
+    @BindView(R.id.name_word_text_view)
+    public lateinit var nameWordTextView: TextView
+    @BindView(R.id.date_word_text_view)
+    public lateinit var dateWordTextView: TextView
+    @BindView(R.id.transcription_word_text_view)
+    public lateinit var transcriptionTextView: TextView
+    @BindView(R.id.translation_word_text_view)
+    public lateinit var translationTextView: TextView
+    @BindView(R.id.association_word_text_view)
+    public lateinit var associationTextView: TextView
+    @BindView(R.id.etymology_word_text_view)
+    public lateinit var etymologyTextView: TextView
+    @BindView(R.id.description_word_text_view)
+    public lateinit var descriptionTextView: TextView
+    @BindView(R.id.next_word_button)
+    public lateinit var nextWordButton: MaterialButton
 
     @Inject
     public lateinit var wordDao: WordDao
-
     @Inject
     public lateinit var disposables: CompositeDisposable
-    private var idWord: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_word)
+        ButterKnife.bind(this)
 
         initView()
-        initWord()
     }
 
     override fun onDestroy() {
@@ -72,19 +81,8 @@ class ShowWordActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.nameWordTextView = findViewById(R.id.name_word_text_view)
-        this.dateWordTextView = findViewById(R.id.date_word_text_view)
-        this.transcriptionTextView = findViewById(R.id.transcription_word_text_view)
-        this.translationTextView = findViewById(R.id.translation_word_text_view)
-        this.associationTextView = findViewById(R.id.association_word_text_view)
-        this.etymologyTextView = findViewById(R.id.etymology_word_text_view)
-        this.descriptionTextView = findViewById(R.id.description_word_text_view)
-        this.nextWordButton = findViewById(R.id.next_word_button)
+        val idWord = intent.getLongExtra("id_word", -1)
 
-        idWord = intent.getLongExtra("id_word", -1)
-    }
-
-    private fun initWord() {
         disposables.add(wordDao.getById(idWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

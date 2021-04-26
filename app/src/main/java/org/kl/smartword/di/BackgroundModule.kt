@@ -33,7 +33,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 import org.kl.smartword.work.LoadDictionaryService
-import java.util.concurrent.TimeUnit
+import org.kl.smartword.util.seconds
 
 @Module
 class BackgroundModule {
@@ -48,8 +48,8 @@ class BackgroundModule {
     @Singleton
     fun provideJobInfo(serviceComponent: ComponentName): JobInfo {
         return JobInfo.Builder(LoadDictionaryService.JOB_ID, serviceComponent)
-                .setMinimumLatency(TimeUnit.SECONDS.toMillis(1))
-                .setOverrideDeadline(TimeUnit.SECONDS.toMillis(5))
+                .setMinimumLatency(1.seconds)
+                .setOverrideDeadline(5.seconds)
                 .setRequiresDeviceIdle(false)
                 .setRequiresCharging(false)
                 .build()

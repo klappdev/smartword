@@ -44,7 +44,7 @@ import org.kl.smartword.db.LessonDao
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.model.Word
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 
 class LoadDictionaryService : JobService() {
     @Inject
@@ -63,7 +63,7 @@ class LoadDictionaryService : JobService() {
     }
 
     override fun onCreate() {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
         super.onCreate()
     }
 
@@ -116,7 +116,7 @@ class LoadDictionaryService : JobService() {
                     lessonDao.dataSubject.onNext(result)
                     lessonDao.dataSubject.onComplete()
 
-                    addLessons(result, parameters)
+                    storeLessons(result, parameters)
                 }
             }))
     }
@@ -139,7 +139,7 @@ class LoadDictionaryService : JobService() {
                         listWords += word.copy(idLesson = newIdLesson)
                     }
 
-                    addWords(listWords, parameters)
+                    storeWords(listWords, parameters)
                 }
             }))
     }
@@ -188,7 +188,7 @@ class LoadDictionaryService : JobService() {
             }))
     }
 
-    private fun addLessons(lessons: List<Lesson>, parameters: JobParameters) {
+    private fun storeLessons(lessons: List<Lesson>, parameters: JobParameters) {
         disposables.add(lessonDao.addAll(lessons)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -203,7 +203,7 @@ class LoadDictionaryService : JobService() {
             }))
     }
 
-    private fun addWords(words: List<Word>, parameters: JobParameters) {
+    private fun storeWords(words: List<Word>, parameters: JobParameters) {
         disposables.add(wordDao.addAll(words)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -32,8 +32,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.disposables.CompositeDisposable
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.validate.ViewValidator
 import org.kl.smartword.event.word.AddWordListener
@@ -42,42 +45,41 @@ import org.kl.smartword.net.DictionaryService
 import org.kl.smartword.net.NetworkConnectivityHelper
 
 class AddWordActivity : AppCompatActivity() {
-    private lateinit var addButton: Button
-    private lateinit var loadButton: FloatingActionButton
+    @BindView(R.id.add_word_button)
+    public lateinit var addButton: Button
+    @BindView(R.id.load_word_button)
+    public lateinit var loadButton: FloatingActionButton
 
-    lateinit var nameTextView: TextView
-        private set
-    lateinit var transcriptionTextView: TextView
-        private set
-    lateinit var translationTextView: TextView
-        private set
-    lateinit var associationTextView: TextView
-        private set
-    lateinit var etymologyTextView: TextView
-        private set
-    lateinit var descriptionTextView: TextView
-        private set
+    @BindView(R.id.name_word_text_view)
+    public lateinit var nameTextView: TextView
+    @BindView(R.id.transcription_word_text_view)
+    public lateinit var transcriptionTextView: TextView
+    @BindView(R.id.translation_word_text_view)
+    public lateinit var translationTextView: TextView
+    @BindView(R.id.association_word_text_view)
+    public lateinit var associationTextView: TextView
+    @BindView(R.id.etymology_word_text_view)
+    public lateinit var etymologyTextView: TextView
+    @BindView(R.id.description_word_text_view)
+    public lateinit var descriptionTextView: TextView
 
     @Inject
     public lateinit var wordDao: WordDao
-
     @Inject
     public lateinit var networkConnectivity: NetworkConnectivityHelper
-
     @Inject
     public lateinit var dictionaryService: DictionaryService
-
     @Inject
     public lateinit var viewValidator: ViewValidator
-
     @Inject
     public lateinit var disposables: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_word)
+        ButterKnife.bind(this)
 
         initView()
     }
@@ -88,18 +90,9 @@ class AddWordActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.nameTextView = findViewById(R.id.name_word_text_view)
-        this.transcriptionTextView = findViewById(R.id.transcription_word_text_view)
-        this.translationTextView = findViewById(R.id.translation_word_text_view)
-        this.associationTextView = findViewById(R.id.association_word_text_view)
-        this.etymologyTextView = findViewById(R.id.etymology_word_text_view)
-
-        this.addButton = findViewById(R.id.add_word_button)
-        this.loadButton = findViewById(R.id.load_word_button)
-
         val idLesson = intent.getLongExtra("id_lesson", -1)
-        addButton.setOnClickListener(AddWordListener(this, idLesson))
 
+        addButton.setOnClickListener(AddWordListener(this, idLesson))
         loadButton.setOnClickListener(LoadWordListener(this))
     }
 }

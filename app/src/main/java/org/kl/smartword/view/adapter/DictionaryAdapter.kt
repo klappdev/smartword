@@ -29,20 +29,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 
-import org.kl.smartword.model.Lesson
 import org.kl.smartword.R
+import org.kl.smartword.model.Lesson
 import org.kl.smartword.view.holder.LessonViewHolder
 
-class DictionaryAdapter : BaseAdapter {
-    var context: Context
-    var listLessons: MutableList<Lesson>
-    var position: Int
-
-    constructor(context: Context, list: MutableList<Lesson>) {
-        this.context = context
-        this.listLessons = list
-        this.position = -1
-    }
+class DictionaryAdapter(val context: Context, val listLessons: MutableList<Lesson>) : BaseAdapter() {
+    var position: Int = -1
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView

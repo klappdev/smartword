@@ -39,36 +39,44 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+import butterknife.BindView
+import butterknife.Unbinder
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.LessonDao
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.view.activity.MainActivity
 import org.kl.smartword.view.adapter.CategoryAdapter
 
 class CategoryFragment : Fragment() {
-    private lateinit var emptyTextView: TextView
-    private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var unbinder: Unbinder
+
+    @BindView(R.id.category_empty_text_view)
+    public lateinit var emptyTextView: TextView
+    @BindView(R.id.category_recycle_view)
+    public lateinit var categoryRecyclerView: RecyclerView
 
     @Inject
-    public  lateinit var lessonDao: LessonDao
-
+    public lateinit var lessonDao: LessonDao
     @Inject
     public lateinit var disposables: CompositeDisposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater.inflate(R.layout.fragment_category, container, false)
         setHasOptionsMenu(true)
+        unbinder = ButterKnife.bind(this, rootView)
 
-        initView(rootView)
+        initView()
         updateLessons()
 
         return rootView
     }
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as WordApplication).appComponent.inject(this)
+        (context.applicationContext as MainApplication).appComponent.inject(this)
         super.onAttach(context)
     }
 
@@ -77,24 +85,28 @@ class CategoryFragment : Fragment() {
         initLessons()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         disposables.dispose()
+        unbinder.unbind()
     }
 
-    private fun initView(rootView: View) {
-        this.emptyTextView = rootView.findViewById(R.id.category_empty_text_view)
-        this.categoryRecyclerView = rootView.findViewById(R.id.category_recycle_view)
-
-        this.categoryAdapter = CategoryAdapter(rootView.context, mutableListOf())
+    private fun initView() {
+        this.categoryAdapter = CategoryAdapter(mutableListOf())
 
         val mainActivity = (activity as MainActivity)
-        mainActivity.initCategoryListeners(this)
+        initListeners(mainActivity)
 
         with(categoryRecyclerView) {
             layoutManager = GridLayoutManager(context, 2)
             adapter = categoryAdapter
         }
+    }
+
+    private fun initListeners(activity: MainActivity) {
+        activity.categoryFragment = this
+
+        /*TODO: init listeners*/
     }
 
     private fun initLessons() {

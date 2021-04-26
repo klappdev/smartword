@@ -23,7 +23,6 @@
  */
 package org.kl.smartword.view.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -32,14 +31,7 @@ import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
 import org.kl.smartword.view.holder.CategoryViewHolder
 
-class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder> {
-    private var context: Context
-    var listLessons: MutableList<Lesson>
-
-    constructor(context: Context, list: MutableList<Lesson>) {
-        this.context = context
-        this.listLessons = list
-    }
+class CategoryAdapter(val listLessons: MutableList<Lesson>) : RecyclerView.Adapter<CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context)

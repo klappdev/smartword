@@ -36,40 +36,46 @@ import javax.inject.Inject
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.word.*
 import org.kl.smartword.model.Word
 import org.kl.smartword.view.adapter.LessonAdapter
 
 class ShowLessonActivity : AppCompatActivity() {
-    private lateinit var emptyTextView: TextView
-    private lateinit var wordsListView: ListView
-    public  lateinit var lessonAdapter: LessonAdapter
+    @BindView(R.id.word_empty_text_view)
+    public lateinit var emptyTextView: TextView
+    @BindView(R.id.word_list_view)
+    public lateinit var wordsListView: ListView
+    @BindView(R.id.add_word_button)
+    public lateinit var addWordButton: FloatingActionButton
 
-    private lateinit var addWordButton: FloatingActionButton
+    @Inject
+    public lateinit var wordDao: WordDao
+    @Inject
+    public lateinit var disposables: CompositeDisposable
+    public lateinit var lessonAdapter: LessonAdapter
+
     private lateinit var navigateWordListener: NavigateWordListener
     private lateinit var resetWordListener: ResetWordListener
     private lateinit var sortWordListener: SortWordListener
     private lateinit var deleteWordListener: DeleteWordListener
 
-    @Inject
-    public lateinit var wordDao: WordDao
-
-    @Inject
-    public lateinit var disposables: CompositeDisposable
     private var menuItemSelected: Boolean = false
     private var idLesson: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words)
+        ButterKnife.bind(this)
 
         initView()
         initListeners()
@@ -131,10 +137,6 @@ class ShowLessonActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.emptyTextView = findViewById(R.id.word_empty_text_view)
-        this.wordsListView = findViewById(R.id.word_list_view)
-        this.addWordButton = findViewById(R.id.add_word_button)
-
         idLesson = intent.getLongExtra("id_lesson", -1)
 
         this.lessonAdapter = LessonAdapter(this, mutableListOf())
@@ -153,15 +155,11 @@ class ShowLessonActivity : AppCompatActivity() {
         disposables.add(wordDao.getAllByIdLesson(idLesson)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableObserver<List<Word>>() {
-                override fun onComplete() {}
-                override fun onError(e: Throwable) {}
-                override fun onNext(result: List<Word>) {
-                    lessonAdapter.position = -1
-                    lessonAdapter.listWords.clear()
-                    lessonAdapter.listWords.addAll(result)
-                    lessonAdapter.notifyDataSetChanged()
-                }
-            }))
+            .subscribe { result: List<Word> ->
+                lessonAdapter.position = -1
+                lessonAdapter.listWords.clear()
+                lessonAdapter.listWords.addAll(result)
+                lessonAdapter.notifyDataSetChanged()
+            })
     }
 }

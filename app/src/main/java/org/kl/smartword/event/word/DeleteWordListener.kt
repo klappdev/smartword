@@ -24,7 +24,6 @@
 package org.kl.smartword.event.word
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,7 +38,7 @@ class DeleteWordListener(activity: ShowLessonActivity) {
     private val wordDao = activity.wordDao
     private val disposables = activity.disposables
     private val lessonAdapter = activity.lessonAdapter
-    private val context: Context = lessonAdapter.context
+    private val context = lessonAdapter.context
 
     operator fun invoke(): Boolean {
         val dialog = AlertDialog.Builder(context)

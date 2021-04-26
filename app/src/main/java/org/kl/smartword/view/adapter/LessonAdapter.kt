@@ -33,16 +33,8 @@ import org.kl.smartword.R
 import org.kl.smartword.model.Word
 import org.kl.smartword.view.holder.WordViewHolder
 
-class LessonAdapter : BaseAdapter {
-    var context: Context
-    var listWords: MutableList<Word>
-    var position: Int
-
-    constructor(context: Context, list: MutableList<Word>) {
-        this.context = context
-        this.listWords = list
-        this.position = -1
-    }
+class LessonAdapter(val context: Context, val listWords: MutableList<Word>) : BaseAdapter() {
+    var position: Int = -1
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView

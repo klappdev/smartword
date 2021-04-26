@@ -29,7 +29,7 @@ import org.kl.smartword.di.AppComponent
 import org.kl.smartword.di.AppModule
 import org.kl.smartword.di.DaggerAppComponent
 
-class WordApplication : Application() {
+class MainApplication : Application() {
     lateinit var appComponent: AppComponent
 
     override fun onCreate() {

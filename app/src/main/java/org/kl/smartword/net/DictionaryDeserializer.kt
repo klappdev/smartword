@@ -40,10 +40,16 @@ class DictionaryDeserializer : JsonDeserializer<Word> {
         private const val TAG = "TAG-DD"
     }
 
+    @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement?,
                              typeOf: Type?,
                              context: JsonDeserializationContext?): Word {
         val rawPages = json?.asJsonObject?.get("query")?.asJsonObject?.get("pages")
+
+        /**
+         FIXME: maybe using another approach
+         val jsonObject = json?.asJsonObject ?: throw JsonParseException("Word json object is incorrect") 
+        */
 
         if (rawPages != null) {
             val entries = rawPages.asJsonObject.entrySet()

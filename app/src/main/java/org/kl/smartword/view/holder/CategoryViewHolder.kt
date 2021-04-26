@@ -27,24 +27,28 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
+import androidx.recyclerview.widget.RecyclerView
+import androidx.cardview.widget.CardView
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.cardview.widget.CardView
+import butterknife.BindView
+import butterknife.ButterKnife
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
 
-class CategoryViewHolder : RecyclerView.ViewHolder {
-    private val categoryCardView: CardView
-    private val categoryImage: ImageView
-    private val nameTextView: TextView
+class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    @BindView(R.id.category_card_view)
+    lateinit var categoryCardView: CardView
+    @BindView(R.id.item_category_image)
+    lateinit var categoryImage: ImageView
+    @BindView(R.id.name_text_view)
+    lateinit var nameTextView: TextView
 
-    constructor(view: View) : super(view) {
-        this.categoryCardView = view.findViewById(R.id.category_card_view)
-        this.categoryImage = view.findViewById(R.id.item_category_image)
-        this.nameTextView = view.findViewById(R.id.name_text_view)
+    init {
+        ButterKnife.bind(this, view)
     }
 
     fun bind(item: Lesson) {

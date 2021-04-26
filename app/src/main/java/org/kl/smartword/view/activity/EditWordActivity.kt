@@ -31,48 +31,49 @@ import javax.inject.Inject
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableMaybeObserver
 import io.reactivex.schedulers.Schedulers
 
+import butterknife.BindView
+import butterknife.ButterKnife
+
 import org.kl.smartword.R
-import org.kl.smartword.WordApplication
+import org.kl.smartword.MainApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.event.validate.ViewValidator
 import org.kl.smartword.model.Word
 import org.kl.smartword.event.word.EditWordListener
 
 class EditWordActivity : AppCompatActivity() {
-    private lateinit var editButton: Button
-    lateinit var nameTextView: TextView
-        private set
-    lateinit var transcriptionTextView: TextView
-        private set
-    lateinit var translationTextView: TextView
-        private set
-    lateinit var associationTextView: TextView
-        private set
-    lateinit var etymologyTextView: TextView
-        private set
-    lateinit var descriptionTextView: TextView
-        private set
+    @BindView(R.id.name_word_text_view)
+    public lateinit var nameTextView: TextView
+    @BindView(R.id.transcription_word_text_view)
+    public lateinit var transcriptionTextView: TextView
+    @BindView(R.id.translation_word_text_view)
+    public lateinit var translationTextView: TextView
+    @BindView(R.id.association_word_text_view)
+    public lateinit var associationTextView: TextView
+    @BindView(R.id.etymology_word_text_view)
+    public lateinit var etymologyTextView: TextView
+    @BindView(R.id.description_word_text_view)
+    public lateinit var descriptionTextView: TextView
+    @BindView(R.id.edit_word_button)
+    public lateinit var editButton: Button
 
     @Inject
     public lateinit var wordDao: WordDao
-
     @Inject
     public lateinit var viewValidator: ViewValidator
-
     @Inject
     public lateinit var disposables: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as WordApplication).appComponent.inject(this)
+        (application as MainApplication).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_word)
+        ButterKnife.bind(this)
 
         initView()
-        initWord()
     }
 
     override fun onDestroy() {
@@ -81,35 +82,21 @@ class EditWordActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.nameTextView = findViewById(R.id.name_word_text_view)
-        this.transcriptionTextView = findViewById(R.id.transcription_word_text_view)
-        this.translationTextView = findViewById(R.id.translation_word_text_view)
-        this.associationTextView = findViewById(R.id.association_word_text_view)
-        this.etymologyTextView = findViewById(R.id.etymology_word_text_view)
-        this.descriptionTextView = findViewById(R.id.description_word_text_view)
-        this.editButton = findViewById(R.id.edit_word_button)
-    }
-
-    private fun initWord() {
         val idWord = intent.getLongExtra("id_word", -1)
 
         disposables.add(wordDao.getById(idWord)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object: DisposableMaybeObserver<Word>() {
-                override fun onComplete() {}
-                override fun onError(e: Throwable) {}
-                override fun onSuccess(result: Word) {
-                    nameTextView.text = result.name
-                    transcriptionTextView.text = result.transcription
-                    translationTextView.text = result.translation
-                    associationTextView.text = result.association
-                    etymologyTextView.text = result.etymology
-                    descriptionTextView.text = result.description
+            .subscribe { result: Word ->
+                nameTextView.text = result.name
+                transcriptionTextView.text = result.transcription
+                translationTextView.text = result.translation
+                associationTextView.text = result.association
+                etymologyTextView.text = result.etymology
+                descriptionTextView.text = result.description
 
-                    val listener = EditWordListener(this@EditWordActivity, result.id, result.idLesson)
-                    editButton.setOnClickListener(listener)
-                }
-            }))
+                val listener = EditWordListener(this@EditWordActivity, result.id, result.idLesson)
+                editButton.setOnClickListener(listener)
+            })
     }
 }

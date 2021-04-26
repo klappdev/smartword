@@ -26,16 +26,6 @@ package org.kl.smartword.net
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level
 
 import io.reactivex.Observable
 import org.kl.smartword.model.Word
@@ -52,34 +42,4 @@ interface DictionaryService {
 
     @GET("w/api.php")
     fun getWordContent(@QueryMap parameters: Map<String, String>): Observable<Word>
-
-    companion object {
-        private const val BASE_URL = "http://wiktionary.org"
-
-        @JvmStatic
-        fun createOkHttpClient(): OkHttpClient {
-            val logger = HttpLoggingInterceptor().apply { level = Level.BASIC }
-
-            return OkHttpClient.Builder()
-                    .addInterceptor(logger)
-                    .build()
-        }
-
-        @JvmStatic
-        fun createGson(): Gson {
-            return GsonBuilder()
-                    .registerTypeAdapter(Word::class.java, DictionaryDeserializer())
-                    .create()
-        }
-
-        @JvmStatic
-        fun createRetrofit(gson: Gson, client: OkHttpClient): Retrofit {
-            return Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
-        }
-    }
 }
