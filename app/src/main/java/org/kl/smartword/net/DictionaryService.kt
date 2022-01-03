@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import retrofit2.http.QueryMap
 
 import io.reactivex.Observable
 import org.kl.smartword.model.Word
+import java.net.URL
 
 interface DictionaryService {
 
@@ -38,8 +39,20 @@ interface DictionaryService {
                        @Query("redirects") redirects: String,
                        @Query("format") format: String,
                        @Query("continues") continues: String,
-                       @Query("title") title: String): Observable<Word>
+                       @Query("titles") title: String): Observable<Word>
 
     @GET("w/api.php")
     fun getWordContent(@QueryMap parameters: Map<String, String>): Observable<Word>
+
+    @GET("w/api.php")
+    fun getWordImage(@Query("action") action: String,
+                     @Query("prop") property: String,
+                     @Query("piprop") piProperty: String,
+                     @Query("redirects") redirects: String,
+                     @Query("format") format: String,
+                     @Query("continues") continues: String,
+                     @Query("titles") title: String): Observable<URL>
+
+    @GET("w/api.php")
+    fun getWordImage(@QueryMap parameters: Map<String, String>): Observable<URL>
 }

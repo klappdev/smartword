@@ -27,9 +27,8 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.IntentFilter
 
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
+import timber.log.Timber
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,7 +37,6 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 import javax.inject.Inject
 import java.util.concurrent.TimeUnit
@@ -47,6 +45,7 @@ import java.util.concurrent.atomic.AtomicLongArray
 import org.kl.smartword.MainApplication
 import org.kl.smartword.db.WordDao
 import org.kl.smartword.model.Word
+import org.kl.smartword.util.readJsonFileLines
 
 class LoadWordService : JobService() {
     @Inject
@@ -123,7 +122,10 @@ class LoadWordService : JobService() {
     }
 
     private fun loadWords(lessonIds: AtomicLongArray, parameters: JobParameters) {
-        disposables.add(Observable.fromCallable(::loadWordsSynchronously)
+        disposables.add(Observable.fromCallable {
+                val wordType = object : TypeToken<List<Word>>(){}.type
+                applicationContext.assets.readJsonFileLines<Word>("words.json", wordType)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<List<Word>>() {
@@ -143,20 +145,6 @@ class LoadWordService : JobService() {
                     storeWords(listWords, parameters)
                 }
             }))
-    }
-
-    @Throws(Exception::class)
-    private fun loadWordsSynchronously(): List<Word> {
-        val words = mutableListOf<Word>()
-
-        applicationContext.assets.open("words.json").use { inputStream ->
-            JsonReader(inputStream.reader()).use { jsonReader ->
-                val wordType = object : TypeToken<List<Word>>(){}.type
-                words.addAll(Gson().fromJson(jsonReader, wordType))
-            }
-        }
-
-        return words
     }
 
     private fun storeWords(words: List<Word>, parameters: JobParameters) {

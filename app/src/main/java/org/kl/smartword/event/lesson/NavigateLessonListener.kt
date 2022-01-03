@@ -27,10 +27,10 @@ import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 
-import org.kl.smartword.view.activity.AddLessonActivity
-import org.kl.smartword.view.activity.EditLessonActivity
-import org.kl.smartword.view.activity.ShowLessonActivity
-import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.ui.lesson.AddLessonActivity
+import org.kl.smartword.ui.lesson.EditLessonActivity
+import org.kl.smartword.ui.lesson.ShowLessonActivity
+import org.kl.smartword.ui.lesson.DictionaryFragment
 
 class NavigateLessonListener(dictionaryFragment: DictionaryFragment) {
     private val dictionaryAdapter = dictionaryFragment.dictionaryAdapter

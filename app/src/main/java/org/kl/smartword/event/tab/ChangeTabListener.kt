@@ -27,11 +27,11 @@ import android.content.Context
 import androidx.viewpager.widget.ViewPager
 import timber.log.Timber
 
-import org.kl.smartword.view.adapter.CATEGORY_TAB
-import org.kl.smartword.view.adapter.DICTIONARY_TAB
-import org.kl.smartword.view.adapter.SectionPagerAdapter
-import org.kl.smartword.view.fragment.DictionaryFragment
-import org.kl.smartword.view.fragment.CategoryFragment
+import org.kl.smartword.ui.common.CATEGORY_TAB
+import org.kl.smartword.ui.common.DICTIONARY_TAB
+import org.kl.smartword.ui.common.SectionPagerAdapter
+import org.kl.smartword.ui.lesson.DictionaryFragment
+import org.kl.smartword.ui.lesson.CategoryFragment
 
 class ChangeTabListener(private val pageAdapter: SectionPagerAdapter,
                         private val context: Context) : ViewPager.OnPageChangeListener {

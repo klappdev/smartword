@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -24,25 +24,29 @@
 package org.kl.smartword
 
 import android.app.Application
+import android.content.Context
 import timber.log.Timber
 
 import org.kl.smartword.di.AppComponent
 import org.kl.smartword.di.AppModule
 import org.kl.smartword.di.DaggerAppComponent
+import org.kl.smartword.settings.CommonSettings
+import org.kl.smartword.settings.SettingsHelper
 import org.kl.smartword.util.DebugLogTree
 import org.kl.smartword.util.ReleaseLogTree
 
-class MainApplication : Application() {
-    lateinit var appComponent: AppComponent
+open class MainApplication : Application() {
+    public lateinit var appComponent: AppComponent
 
-    override fun onCreate() {
-        super.onCreate()
+    override fun attachBaseContext(base: Context) {
+        val language = CommonSettings.getInstance(base).readLanguageSynchronously()
+        super.attachBaseContext(SettingsHelper.setLocale(base, language))
 
         initializeDagger()
         initializeTimber()
     }
 
-    private fun initializeDagger() {
+    protected open fun initializeDagger() {
         this.appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()

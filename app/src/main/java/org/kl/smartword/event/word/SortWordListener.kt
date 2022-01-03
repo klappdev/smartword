@@ -27,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.activity.ShowLessonActivity
+import org.kl.smartword.ui.lesson.ShowLessonActivity
 
 class SortWordListener(activity: ShowLessonActivity, private val idLesson: Long) {
     private val wordDao = activity.wordDao

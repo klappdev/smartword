@@ -31,7 +31,7 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.ui.lesson.DictionaryFragment
 import org.kl.smartword.util.toast
 
 class DeleteLessonListener(dictionaryFragment: DictionaryFragment) {

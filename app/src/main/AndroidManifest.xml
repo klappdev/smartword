@@ -12,55 +12,72 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/SmartWord.Theme"
         android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".view.activity.ShowWordActivity"
+            android:name=".ui.word.ShowWordActivity"
+            android:exported="false"
             android:label="@string/show_word_name">
         </activity>
         <activity
-            android:name=".view.activity.EditWordActivity"
+            android:name=".ui.word.EditWordActivity"
+            android:exported="false"
             android:label="@string/edit_word_name">
         </activity>
         <activity
-            android:name=".view.activity.AddWordActivity"
+            android:name=".ui.word.AddWordActivity"
+            android:exported="false"
             android:label="@string/add_word_name">
         </activity>
         <activity
-            android:name=".view.activity.ShowLessonActivity"
+            android:name=".ui.lesson.ShowLessonActivity"
+            android:exported="false"
             android:label="@string/show_lesson_name">
         </activity>
         <activity
-            android:name=".view.activity.EditLessonActivity"
+            android:name=".ui.lesson.EditLessonActivity"
+            android:exported="false"
             android:label="@string/edit_lesson_name">
         </activity>
         <activity
-            android:name=".view.activity.AddLessonActivity"
+            android:name=".ui.lesson.AddLessonActivity"
+            android:exported="false"
             android:label="@string/add_lesson_name">
         </activity>
+
         <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="true"
+            android:label="@string/settings_title" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SmartWord.Theme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		
-		<service
+
+        <service
             android:name=".work.LoadLessonService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".work.LoadWordService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

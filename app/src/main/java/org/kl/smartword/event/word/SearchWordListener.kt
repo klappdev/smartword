@@ -34,7 +34,7 @@ import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.activity.ShowLessonActivity
+import org.kl.smartword.ui.lesson.ShowLessonActivity
 
 class SearchWordListener(
     private val activity: ShowLessonActivity,

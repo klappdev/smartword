@@ -32,4 +32,3 @@ Used third party libraries:
   * Dagger2
   * ButterKnife
   * Timber
-  * 

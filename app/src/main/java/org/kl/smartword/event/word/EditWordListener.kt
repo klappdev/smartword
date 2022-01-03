@@ -31,7 +31,7 @@ import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Word
 import org.kl.smartword.util.toast
-import org.kl.smartword.view.activity.EditWordActivity
+import org.kl.smartword.ui.word.EditWordActivity
 
 class EditWordListener(private val activity: EditWordActivity,
                        private val idWord: Long,

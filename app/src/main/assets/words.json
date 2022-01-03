@@ -2,37 +2,37 @@
   {
 	"id": 1,
 	"idLesson": 1,
-	"name": "le/la chat(e)",
+	"name": "der Kater/die Katze",
 	"transcription":"[]",
 	"translation":"кошка",
 	"association":"-",
 	"etymology":"-",
-	"description":"chaton"
+	"description":"-"
   },
   {
 	"id": 2,
 	"idLesson": 1,
-	"name": "le chien",
+	"name": "der Hund",
 	"transcription":"[]",
 	"translation":"собака",
 	"association":"-",
 	"etymology":"-",
-	"description":"le chiot"
+	"description":"-"
   },
   {
 	"id": 3,
 	"idLesson": 1,
-	"name": "le lapin",
+	"name": "das Kaninchen",
 	"transcription":"[]",
 	"translation":"кролик",
-	"association":"кролик по имени Ляпа",
+	"association":"кролик по имени Канихен",
 	"etymology":"-",
 	"description":"-"
   },
   {
 	"id": 4,
 	"idLesson": 2,
-	"name": "le poisson-chat",
+	"name": "der Wels",
 	"transcription":"[]",
 	"translation":"сом",
 	"association":"-",
@@ -42,51 +42,51 @@
   {
 	"id": 5,
 	"idLesson": 2,
-	"name": "le brochet",
+	"name": "der Hecht",
 	"transcription": "[]",
 	"translation": "щука",
-	"association": "Икринка щуки как брошки",
-	"etymology": "broche - голка, шпилька",
+	"association": "Хехт щука",
+	"etymology": "-",
 	"description": "-"
   },
   {
 	"id": 6,
 	"idLesson": 2,
-	"name": "le perchoir",
+	"name": "der Barsch",
 	"transcription": "[]",
 	"translation": "окунь",
 	"association": "-",
-	"etymology": "perce - колится",
-	"description": "percer - колоть"
+	"etymology": "-",
+	"description": "-"
   },
   {
 	"id": 7,
 	"idLesson": 3,
-	"name": "oeillet",
+	"name": "die Nelke",
 	"transcription": "[]",
 	"translation": "гвоздика",
 	"association": "",
-	"etymology": "oeillet -> oeil - (ст.фр.) - глаз, ueil",
+	"etymology": "нельке гвоздика",
 	"description": "-"
   },
   {
 	"id": 8,
 	"idLesson": 3,
-	"name": "Muguet",
+	"name": "Maiglöckchen",
 	"transcription": "[]",
-	"translation": "ландиш",
-	"association": "",
-	"etymology": "лат. convallaria majalis, muscade - мускатный орех, похожий запах",
+	"translation": "ландыш",
+	"association": "-",
+	"etymology": "-",
 	"description": "-"
   },
   {
 	"id": 9,
 	"idLesson": 3,
-	"name": "le camomille",
+	"name": "Kamille",
 	"transcription":"[]",
 	"translation": "ромашка",
 	"association": "-",
 	"etymology": "з грецького языка - яблуко земли",
-	"description": "в французском - pomme de terre"
+	"description": "-"
   }
 ]

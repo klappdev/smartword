@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -25,10 +25,13 @@ package org.kl.smartword.model
 
 import com.google.gson.annotations.SerializedName
 
-data class RemoteWord(
-        @SerializedName("pageId") val id: Long,
-        @SerializedName("title")  val name: String,
-        @SerializedName("index")  val index: Int,
-        @SerializedName("extract") val content: String) {
-    constructor() : this(0L, "", 0, "")
-}
+data class RemoteWord<T>(
+    @SerializedName("pageId")
+    val id: Long,
+    @SerializedName("title")
+    val name: String,
+    @SerializedName("index")
+    val index: Int,
+    @SerializedName(value = "extract", alternate = ["original"])
+    val content: T
+)

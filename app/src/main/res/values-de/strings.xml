@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">smartword</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="category_name">Einfache Kategorie</string>
+
+    <string name="add_word_name">Wort hinzufügen</string>
+    <string name="add_lesson_name">Lektion hinzufügen</string>
+    <string name="edit_word_name">Wort aktualisieren</string>
+    <string name="edit_lesson_name">Lektion aktualisieren</string>
+    <string name="show_lesson_name">Inhalt Lektion</string>
+    <string name="show_word_name">Inhaltswort</string>
+
+    <string name="category_tab">KATEGORIE</string>
+    <string name="dictionary_tab">WÖRTERBUCH</string>
+
+    <string name="name_hint">Name</string>
+    <string name="description_hint">die Bezeichnung</string>
+    <string name="transcription_hint">die Transkription</string>
+    <string name="translation_hint">die Übersetzung</string>
+    <string name="association_hint">die Assoziation</string>
+    <string name="etymology_hint">die Etymologie</string>
+    <string name="unknown_hint">Unbekannt</string>
+
+    <string name="transcription_title">die Transkription:</string>
+    <string name="translation_title">die Übersetzung:</string>
+    <string name="association_title">die Assoziation:</string>
+    <string name="etymology_title">die Etymologie:</string>
+    <string name="description_title">die Bezeichnung:</string>
+
+    <string name="add_title">Hinzufügen</string>
+    <string name="sort_title">Sortieren</string>
+    <string name="delete_title">Löschen</string>
+    <string name="edit_title">Bearbeiten</string>
+    <string name="search_hint">die Suche …</string>
+    <string name="next_word_title">Nächstes Wort</string>
+
+    <string name="empty_categories">Listenkategorie ist leer</string>
+    <string name="empty_dictionary">Listenlektionen sind leer</string>
+    <string name="empty_words">Listenwörter sind leer</string>
+
+    <string name="language_header">die Sprache</string>
+    <string name="theme_header">Thema</string>
+    <string name="language_title">Sprachen ändern</string>
+    <string name="theme_title">Thema Licht/Nacht ändern</string>
+    <string name="settings_title">Einstellungen</string>
+</resources>

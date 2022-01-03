@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
-import org.kl.smartword.view.activity.AddWordActivity
+import org.kl.smartword.ui.word.AddWordActivity
 import org.kl.smartword.model.Word
 import org.kl.smartword.util.toast
 

@@ -23,7 +23,7 @@
  */
 package org.kl.smartword.event.word
 
-import org.kl.smartword.view.activity.ShowLessonActivity
+import org.kl.smartword.ui.lesson.ShowLessonActivity
 
 class ResetWordListener(private val activity: ShowLessonActivity) {
     private val lessonAdapter = activity.lessonAdapter

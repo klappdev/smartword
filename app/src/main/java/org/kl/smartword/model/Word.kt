@@ -34,6 +34,7 @@ data class Word(val id: Long,
                 val association: String?,
                 val etymology: String?,
                 val description: String,
-                val date: String = Date().formatted()) {
+                val date: String = Date().formatted()
+                /*val iconUrl: String = ""*/) {
     constructor() : this(0, 0, "", "[]", "", "", "", "")
 }

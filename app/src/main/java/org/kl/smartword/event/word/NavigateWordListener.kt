@@ -27,10 +27,10 @@ import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
 
-import org.kl.smartword.view.activity.AddWordActivity
-import org.kl.smartword.view.activity.EditWordActivity
-import org.kl.smartword.view.activity.ShowWordActivity
-import org.kl.smartword.view.adapter.LessonAdapter
+import org.kl.smartword.ui.word.AddWordActivity
+import org.kl.smartword.ui.word.EditWordActivity
+import org.kl.smartword.ui.word.ShowWordActivity
+import org.kl.smartword.ui.lesson.LessonAdapter
 
 class NavigateWordListener(private val lessonAdapter: LessonAdapter, private val idLesson: Long) {
     private val context = lessonAdapter.context

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.ShowLessonActivity">
+    tools:context=".ui.lesson.ShowLessonActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
 
         android:paddingTop="@dimen/appbar_padding_margin"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/SmartWord.Theme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
 
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:popupTheme="@style/SmartWord.Theme.PopupOverlay">
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

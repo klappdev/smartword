@@ -34,8 +34,8 @@ import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.activity.MainActivity
-import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.ui.MainActivity
+import org.kl.smartword.ui.lesson.DictionaryFragment
 
 class SearchLessonListener(
     dictionaryFragment: DictionaryFragment

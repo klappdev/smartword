@@ -31,7 +31,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.activity.AddLessonActivity
+import org.kl.smartword.ui.lesson.AddLessonActivity
 import org.kl.smartword.util.toast
 
 class AddLessonListener(private val activity: AddLessonActivity) : View.OnClickListener {

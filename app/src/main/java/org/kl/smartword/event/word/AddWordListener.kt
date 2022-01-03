@@ -30,7 +30,7 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Word
-import org.kl.smartword.view.activity.AddWordActivity
+import org.kl.smartword.ui.word.AddWordActivity
 import org.kl.smartword.util.toast
 
 class AddWordListener(private val activity: AddWordActivity,

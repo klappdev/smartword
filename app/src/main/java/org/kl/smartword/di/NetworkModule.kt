@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -40,8 +40,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 import org.kl.smartword.net.DictionaryService
 import org.kl.smartword.net.NetworkConnectivityHelper
-import org.kl.smartword.net.DictionaryDeserializer
+import org.kl.smartword.net.WordContentDeserializer
 import org.kl.smartword.model.Word
+import org.kl.smartword.net.WordImageDeserializer
+import java.net.URL
 
 @Module
 class NetworkModule {
@@ -50,7 +52,6 @@ class NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
-
         return OkHttpClient.Builder()
                 .addInterceptor(logger)
                 .build()
@@ -58,9 +59,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson {
+    fun provideGson(context: Context): Gson {
         return GsonBuilder()
-                .registerTypeAdapter(Word::class.java, DictionaryDeserializer())
+                .registerTypeAdapter(Word::class.java, WordContentDeserializer(context))
+                .registerTypeAdapter(URL::class.java, WordImageDeserializer())
                 .create()
     }
 

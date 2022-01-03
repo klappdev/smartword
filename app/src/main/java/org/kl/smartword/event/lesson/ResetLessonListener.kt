@@ -23,8 +23,8 @@
  */
 package org.kl.smartword.event.lesson
 
-import org.kl.smartword.view.activity.MainActivity
-import org.kl.smartword.view.fragment.DictionaryFragment
+import org.kl.smartword.ui.MainActivity
+import org.kl.smartword.ui.lesson.DictionaryFragment
 
 class ResetLessonListener(dictionaryFragment: DictionaryFragment) {
     private val activity = dictionaryFragment.activity as MainActivity

@@ -26,7 +26,7 @@ package org.kl.smartword.event.word
 import android.view.View
 import android.widget.AdapterView
 
-import org.kl.smartword.view.adapter.LessonAdapter
+import org.kl.smartword.ui.lesson.LessonAdapter
 
 class ChooseWordListener(
     var notifyAction: ((Boolean) -> Boolean)?

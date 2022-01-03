@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2022 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -24,10 +24,18 @@
 package org.kl.smartword.di
 
 import dagger.Component
+import org.kl.smartword.ui.MainActivity
 import javax.inject.Singleton
 
-import org.kl.smartword.view.activity.*
-import org.kl.smartword.view.fragment.*
+import org.kl.smartword.ui.lesson.CategoryFragment
+import org.kl.smartword.ui.lesson.AddLessonActivity
+import org.kl.smartword.ui.lesson.DictionaryFragment
+import org.kl.smartword.ui.lesson.EditLessonActivity
+import org.kl.smartword.ui.lesson.ShowLessonActivity
+import org.kl.smartword.ui.settings.SettingsFragment
+import org.kl.smartword.ui.word.AddWordActivity
+import org.kl.smartword.ui.word.EditWordActivity
+import org.kl.smartword.ui.word.ShowWordActivity
 import org.kl.smartword.work.LoadLessonService
 import org.kl.smartword.work.LoadWordService
 
@@ -47,6 +55,7 @@ interface AppComponent {
 
     fun inject(fragment: CategoryFragment)
     fun inject(fragment: DictionaryFragment)
+    fun inject(fragment: SettingsFragment)
 
     fun inject(service: LoadLessonService)
     fun inject(service: LoadWordService)

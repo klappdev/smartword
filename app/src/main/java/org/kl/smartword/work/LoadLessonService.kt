@@ -27,12 +27,9 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Intent
 
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
-
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,6 +42,7 @@ import io.reactivex.schedulers.Schedulers
 import org.kl.smartword.MainApplication
 import org.kl.smartword.db.LessonDao
 import org.kl.smartword.model.Lesson
+import org.kl.smartword.util.readJsonFileLines
 
 class LoadLessonService : JobService() {
     @Inject
@@ -99,7 +97,10 @@ class LoadLessonService : JobService() {
     }
 
     private fun loadLessons(parameters: JobParameters) {
-        disposables.add(Observable.fromCallable(::loadLessonsSynchronously)
+        disposables.add(Observable.fromCallable {
+                val lessonType = object : TypeToken<List<Lesson>>(){}.type
+                applicationContext.assets.readJsonFileLines<Lesson>("lessons.json", lessonType)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableObserver<List<Lesson>>() {
@@ -115,20 +116,6 @@ class LoadLessonService : JobService() {
                     storeLessons(result, parameters)
                 }
             }))
-    }
-
-    @Throws(Exception::class)
-    private fun loadLessonsSynchronously(): List<Lesson> {
-        val lessons = mutableListOf<Lesson>()
-
-        applicationContext.assets.open("lessons.json").use { inputStream ->
-            JsonReader(inputStream.reader()).use { jsonReader ->
-                val lessonType = object : TypeToken<List<Lesson>>(){}.type
-                lessons.addAll(Gson().fromJson(jsonReader, lessonType))
-            }
-        }
-
-        return lessons
     }
 
     private fun storeLessons(lessons: List<Lesson>, parameters: JobParameters) {

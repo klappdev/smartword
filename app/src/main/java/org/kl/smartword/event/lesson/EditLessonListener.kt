@@ -30,7 +30,7 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.schedulers.Schedulers
 
 import org.kl.smartword.model.Lesson
-import org.kl.smartword.view.activity.EditLessonActivity
+import org.kl.smartword.ui.lesson.EditLessonActivity
 import org.kl.smartword.util.toast
 
 class EditLessonListener(private val activity: EditLessonActivity,
