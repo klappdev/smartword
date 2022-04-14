@@ -25,6 +25,7 @@ package org.kl.smartword.event.validate
 
 import android.widget.TextView
 
+//FIXME: move to ui.common
 class ViewValidator {
     fun error(inputField: TextView, message: String) {
         inputField.requestFocus()
