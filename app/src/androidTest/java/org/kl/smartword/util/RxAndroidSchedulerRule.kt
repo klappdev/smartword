@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
  */
 package org.kl.smartword.util
 
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.internal.schedulers.TrampolineScheduler
-import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
+import io.reactivex.rxjava3.internal.schedulers.TrampolineScheduler
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description

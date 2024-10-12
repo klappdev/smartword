@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -30,7 +30,8 @@ import dagger.Module
 import dagger.Provides
 
 import javax.inject.Singleton
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import org.kl.smartword.event.validate.ViewValidator
 
 @Module
 class TestAppModule(private val application: Application) {
@@ -42,6 +43,10 @@ class TestAppModule(private val application: Application) {
     @Provides
     @Singleton
     fun providesApplicationContext(): Context = application.applicationContext
+
+    @Provides
+    @Singleton
+    fun provideViewValidator(): ViewValidator = ViewValidator()
 
     @Provides
     @Singleton

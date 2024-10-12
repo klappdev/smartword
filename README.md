@@ -27,7 +27,7 @@ Used Android libraries:
 Used third party libraries:
 --------------------------
   * Glide
-  * RxJava2
+  * RxJava3
   * Retrofit2
   * Gson
   * Okhttp3

@@ -2,29 +2,29 @@
 
 buildscript {
     ext {
-        compileSdkVersion = 31
-        minSdkVersion = 24
-        targetSdkVersion = 31
+        compileSdkVersion = 34
+        minSdkVersion = 26
+        targetSdkVersion = 34
 
         appCompatVersion = '1.4.0'
         constraintLayoutVersion = '2.1.2'
-        daggerVersion = '2.34'
+        daggerVersion = '2.51'
         espressoVersion = '3.4.0'
         glideVersion = '4.10.0'
-        gradleVersion = '7.0.2'
+        gradleVersion = '8.1.0'
         gsonVersion = '2.8.6'
         gsonConverterVersion = '2.9.0'
         jsoupVersion = '1.13.1'
         junitVersion = '4.13.2'
-        kotlinVersion = '1.5.21'
+        kotlinVersion = '1.9.22'
         materialVersion = '1.4.0'
         mockitoVersion = '1.10.19'
-        okhttpLoggingVersion = '4.7.2'
+        okhttpLoggingVersion = '4.12.0'
         legacySupportVersion = '1.0.0'
         retrofitVersion = '2.9.0'
-        rxAndroidVersion = '2.1.0'
-        rxJavaVersion = '2.2.4'
-        rxJavaAdapterVersion = '2.4.0'
+        rxAndroidVersion = '3.0.2'
+        rxJavaVersion = '3.1.8'
+        rxJavaAdapterVersion = '2.11.0'
         robolectricVersion = '4.4'
         butterKnifeVersion = '10.2.3'
         preferenceVersion = '1.1.1'
@@ -35,7 +35,7 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         
     }
     dependencies {

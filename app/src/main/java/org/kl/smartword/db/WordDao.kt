@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -23,13 +23,14 @@
  */
 package org.kl.smartword.db
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 
 import timber.log.Timber
 import org.kl.smartword.model.Word
@@ -166,6 +167,7 @@ class WordDao {
         }
     }
 
+    @SuppressLint("Range")
     private fun getByIdSynchronously(id: Long): Word {
         val arguments = arrayOf(id.toString())
         val cursor = database?.query("word", null, "id = ?", arguments, null, null, null)

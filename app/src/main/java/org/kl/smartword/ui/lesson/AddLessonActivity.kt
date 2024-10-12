@@ -29,7 +29,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 import javax.inject.Inject
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 import butterknife.BindView
 import butterknife.ButterKnife

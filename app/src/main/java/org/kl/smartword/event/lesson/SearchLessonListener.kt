@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2021 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -29,8 +29,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 import org.kl.smartword.R
 import org.kl.smartword.model.Lesson
@@ -71,7 +71,7 @@ class SearchLessonListener(
 
     override fun onQueryTextSubmit(query: String?) = true
 
-    override fun onMenuItemActionExpand(view: MenuItem?): Boolean {
+    override fun onMenuItemActionExpand(view: MenuItem): Boolean {
         if (searchView == null) {
             searchView = view?.actionView as SearchView
             searchView?.queryHint = activity.getString(R.string.search_hint)
@@ -85,7 +85,7 @@ class SearchLessonListener(
         return true
     }
 
-    override fun onMenuItemActionCollapse(view: MenuItem?): Boolean {
+    override fun onMenuItemActionCollapse(view: MenuItem): Boolean {
         dictionaryAdapter.position = -1
         activity.notifyMenuItemSelected(false)
         refreshLessons()

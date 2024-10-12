@@ -24,12 +24,11 @@
 package org.kl.smartword.di
 
 import android.content.Context
-import javax.inject.Singleton
-import dagger.Module
-import dagger.Provides
-
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+
+import dagger.Module
+import dagger.Provides
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -38,43 +37,45 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+import java.net.URL
+import javax.inject.Singleton
+
+import org.kl.smartword.model.Word
 import org.kl.smartword.net.DictionaryService
 import org.kl.smartword.net.NetworkConnectivityHelper
 import org.kl.smartword.net.WordContentDeserializer
-import org.kl.smartword.model.Word
 import org.kl.smartword.net.WordImageDeserializer
-import java.net.URL
 
 @Module
-class NetworkModule {
+class TestNetworkModule {
 
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
         return OkHttpClient.Builder()
-                .addInterceptor(logger)
-                .build()
+            .addInterceptor(logger)
+            .build()
     }
 
     @Provides
     @Singleton
     fun provideGson(context: Context): Gson {
         return GsonBuilder()
-                .registerTypeAdapter(Word::class.java, WordContentDeserializer(context))
-                .registerTypeAdapter(URL::class.java, WordImageDeserializer())
-                .create()
+            .registerTypeAdapter(Word::class.java, WordContentDeserializer(context))
+            .registerTypeAdapter(URL::class.java, WordImageDeserializer())
+            .create()
     }
 
     @Provides
     @Singleton
     fun provideRetrofit(gson: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .baseUrl("http://wiktionary.org")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build()
+            .baseUrl("http://wiktionary.org")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .build()
     }
 
     @Provides

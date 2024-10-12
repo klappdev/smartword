@@ -1,7 +1,7 @@
 /*
  * Licensed under the MIT License <http://opensource.org/licenses/MIT>.
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2019 - 2022 https://github.com/klappdev
+ * Copyright (c) 2019 - 2024 https://github.com/klappdev
  *
  * Permission is hereby  granted, free of charge, to any  person obtaining a copy
  * of this software and associated  documentation files (the "Software"), to deal
@@ -40,6 +40,8 @@ class TestSettingsModule {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 
+    @Provides
+    @Singleton
     fun providesCommonSettings(context: Context): CommonSettings {
         return CommonSettings.getInstance(context)
     }
